@@ -92,6 +92,20 @@
   .overall-label { font-size: 16px; font-weight: 700; color: #E8F5E9; }
   .overall-val { font-size: 28px; font-weight: 800; }
 
+  .title-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; margin-bottom: 20px; text-align: center; }
+  .title-card .title-icon { font-size: 2.5rem; margin-bottom: 8px; }
+  .title-card .title-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .title-card .title-desc { font-size: 13px; color: #8aaa8a; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+  .achievements-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+  .achievements-card h3 { font-size: 15px; font-weight: 700; color: #C8E6C9; margin-bottom: 14px; }
+  .ach-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; margin-bottom: 6px; transition: all 0.3s; }
+  .ach-item.locked { opacity: 0.35; }
+  .ach-item.unlocked { background: rgba(46,125,50,0.1); border: 1px solid rgba(46,125,50,0.2); }
+  .ach-icon { font-size: 1.4rem; width: 36px; text-align: center; flex-shrink: 0; }
+  .ach-info .ach-name { font-size: 13px; font-weight: 700; color: #C8E6C9; }
+  .ach-info .ach-req { font-size: 11px; color: #5a7a5a; }
+  .ach-item.unlocked .ach-info .ach-req { color: #66BB6A; }
+
   #goals { flex-direction: column; align-items: center; padding: 32px 16px; background: linear-gradient(180deg, #0a0a08, #0d1a0d); }
   .goals-wrap { max-width: 560px; width: 100%; }
   .goal-header { margin-bottom: 20px; }
@@ -160,6 +174,32 @@ const DAILY_GOALS_POOL={
 
 let currentQ=0,answers={},catScores={energy:0,consumption:0,water:0},overallScore=0;
 let dailyGoals=[],completedGoals=new Set(),allCompletedTexts=[],goalDay=1,bonusPoints=0;
+
+function getPlayerTitle(s){
+  if(s<10)return{icon:'💀',name:'Wasteland Wanderer',desc:"You're leaving a trail of destruction behind you. The earth is scorched and resources are depleted. Time to turn things around before there's nothing left.",color:'#8a5a30'};
+  if(s<25)return{icon:'🏚️',name:'Careless Consumer',desc:"Your habits are taking a serious toll on the environment. The good news? Small changes can make a big difference. Let's start somewhere.",color:'#9a6a40'};
+  if(s<40)return{icon:'🌫️',name:'Foggy Footprint',desc:"You're somewhere in the haze. Not the worst, but your environmental footprint is heavier than it needs to be. A few tweaks could clear things up.",color:'#8a7a50'};
+  if(s<55)return{icon:'🌱',name:'Budding Activist',desc:"You're showing signs of environmental awareness. Some solid habits are forming, but there's plenty of room to grow. Keep pushing forward.",color:'#6a8a40'};
+  if(s<70)return{icon:'🌿',name:'Sustainable Steward',desc:"You're making real, meaningful choices for the planet. Your daily habits are starting to add up. The world 100 years from now thanks you.",color:'#4a8a35'};
+  if(s<85)return{icon:'🌳',name:'Eco Champion',desc:"You're a force for good. Your lifestyle reflects a deep commitment to sustainability. You're not just helping the future, you're building it.",color:'#2a8a2a'};
+  if(s<95)return{icon:'🌍',name:'Guardian of Tomorrow',desc:"Exceptional. You live and breathe sustainability. Your choices today are planting the seeds of a thriving world for generations to come.",color:'#1a7a30'};
+  return{icon:'✨',name:'Solarpunk Visionary',desc:"You've reached the pinnacle. Your lifestyle is a blueprint for the future. If everyone lived like you, 2126 would be a paradise.",color:'#0a8a3a'};
+}
+
+const ACHIEVEMENTS=[
+  {icon:'🏁',name:'First Steps',req:'Complete the baseline survey',check:()=>goalDay>=1},
+  {icon:'📋',name:'Goal Setter',req:'Complete your first daily goal',check:()=>allCompletedTexts.length>=1},
+  {icon:'🔥',name:'On a Roll',req:'Complete 3 days of goals',check:()=>goalDay>3},
+  {icon:'⚡',name:'Energy Saver',req:'Reach 50 in Energy',check:()=>catScores.energy>=50},
+  {icon:'♻️',name:'Waste Warrior',req:'Reach 50 in Consumption',check:()=>catScores.consumption>=50},
+  {icon:'💧',name:'Water Guardian',req:'Reach 50 in Water',check:()=>catScores.water>=50},
+  {icon:'📈',name:'Level Up',req:'Improve your score by 20 points',check:()=>bonusPoints>=20},
+  {icon:'🌿',name:'Sustainable Steward',req:'Reach an overall score of 55',check:()=>overallScore>=55},
+  {icon:'💪',name:'Dedicated',req:'Complete 7 days of goals',check:()=>goalDay>7},
+  {icon:'🌳',name:'Eco Champion',req:'Reach an overall score of 70',check:()=>overallScore>=70},
+  {icon:'🏆',name:'Unstoppable',req:'Complete 20 total goals',check:()=>allCompletedTexts.length>=20},
+  {icon:'✨',name:'Paradise Found',req:'Reach a perfect score of 100',check:()=>overallScore>=100},
+];
 
 // ═══ LANDSCAPE CANVAS RENDERER ═══
 
@@ -316,13 +356,19 @@ function prevQ(){if(currentQ>0){currentQ--;renderSurveyQ();window.scrollTo(0,0);
 function finishSurvey(){const r=computeScores();catScores=r.scores;overallScore=r.overall;renderResults();showScreen('results');}
 
 function renderResults(){
-  const st=getStageInfo(overallScore);
+  const st=getStageInfo(overallScore),pt=getPlayerTitle(overallScore);
   let h=`<div class="landscape-container"><canvas id="mainCanvas"></canvas></div>`;
   h+=`<div class="stage-badge"><p class="stage-name" style="color:${st.color}">${st.name}</p><p class="stage-desc">${st.desc}</p></div>`;
+  h+=`<div class="title-card"><div class="title-icon">${pt.icon}</div><p class="title-name" style="color:${pt.color}">${pt.name}</p><p class="title-desc">${pt.desc}</p></div>`;
   h+=`<div class="score-card"><h3>Category Breakdown</h3>`;
   for(const cat of CATEGORIES){const v=catScores[cat],p=Math.min(v,100),c=barColor(p);
     h+=`<div class="bar-row"><div class="bar-header"><span class="bar-label">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span><span class="bar-val" style="color:${c}">${Math.round(v)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${c}"></div></div></div>`;}
   h+=`<div class="overall-row"><span class="overall-label">Overall Score</span><span class="overall-val" style="color:${st.color}">${overallScore}/100</span></div></div>`;
+  const unlocked=ACHIEVEMENTS.filter(a=>a.check()).length;
+  h+=`<div class="achievements-card"><h3>Achievements (${unlocked}/${ACHIEVEMENTS.length})</h3>`;
+  for(const a of ACHIEVEMENTS){const u=a.check();
+    h+=`<div class="ach-item ${u?'unlocked':'locked'}"><div class="ach-icon">${u?a.icon:'🔒'}</div><div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-req">${u?'Unlocked!':a.req}</div></div></div>`;}
+  h+=`</div>`;
   h+=overallScore>=100?`<button class="btn-main btn-full" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)" disabled>🌍 Paradise Achieved! Score: 100/100</button>`:`<button class="btn-main btn-full" onclick="startGoals()">${goalDay>1?"Next Day\\'s Goals":"Start Daily Goals"}</button>`;
   document.getElementById('results-content').innerHTML=h;
   setTimeout(()=>renderLandscape(document.getElementById('mainCanvas'),overallScore),50);}
