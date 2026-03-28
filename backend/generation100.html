@@ -369,7 +369,7 @@ function renderResults(){
   for(const a of ACHIEVEMENTS){const u=a.check();
     h+=`<div class="ach-item ${u?'unlocked':'locked'}"><div class="ach-icon">${u?a.icon:'🔒'}</div><div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-req">${u?'Unlocked!':a.req}</div></div></div>`;}
   h+=`</div>`;
-  h+=overallScore>=100?`<button class="btn-main btn-full" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)" disabled>🌍 Paradise Achieved! Score: 100/100</button>`:`<button class="btn-main btn-full" onclick="startGoals()">${goalDay>1?"Next Day\\'s Goals":"Start Daily Goals"}</button>`;
+  h+=overallScore>=100?`<button class="btn-main btn-full" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)" disabled>🌍 Paradise Achieved! Score: 100/100</button>`:`<button class="btn-main btn-full" onclick="startGoals()">${goalDay>1?"Next Day's Goals":"Start Daily Goals"}</button>`;
   document.getElementById('results-content').innerHTML=h;
   setTimeout(()=>renderLandscape(document.getElementById('mainCanvas'),overallScore),50);}
 
