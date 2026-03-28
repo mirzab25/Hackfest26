@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generation 100</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #f8faf8; min-height: 100vh; }
+
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── Splash ── */
+  #splash {
+    flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #0d1b0d 0%, #1a3a1a 40%, #0d2818 100%);
+    padding: 24px; text-align: center;
+  }
+  #splash .icon { font-size: 64px; margin-bottom: 8px; filter: drop-shadow(0 0 20px rgba(76,175,80,0.4)); }
+  #splash h1 {
+    font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 800;
+    color: #A5D6A7; margin: 8px 0; letter-spacing: -1px;
+    text-shadow: 0 2px 20px rgba(76,175,80,0.3);
+  }
+  #splash .sub { color: #81C784; font-size: 16px; max-width: 400px; line-height: 1.6; margin-bottom: 8px; }
+  #splash .sub2 { color: #66BB6A; font-size: 13px; max-width: 380px; line-height: 1.5; margin-bottom: 32px; opacity: 0.8; }
+  .btn-primary {
+    padding: 14px 40px; border-radius: 50px; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #43A047, #2E7D32); color: white;
+    font-size: 16px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 20px rgba(46,125,50,0.4); transition: transform 0.2s;
+  }
+  .btn-primary:hover { transform: scale(1.05); }
+  .btn-primary:disabled { background: #ccc; box-shadow: none; cursor: default; transform: none; }
+  .btn-full { width: 100%; border-radius: 12px; padding: 14px; }
+
+  /* ── Survey ── */
+  #survey { flex-direction: column; align-items: center; padding: 24px 16px; background: #f8faf8; }
+  .survey-wrap { max-width: 520px; width: 100%; }
+  .progress-bar { display: flex; gap: 4px; margin-bottom: 24px; }
+  .progress-bar .seg { flex: 1; height: 6px; border-radius: 3px; background: #e0e0e0; transition: background 0.3s; }
+  .progress-bar .seg.done { background: #2E7D32; }
+  .progress-bar .seg.current { background: #66BB6A; }
+  .day-label { font-size: 13px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .day-title { font-family: 'Playfair Display', serif; font-size: 28px; color: #1a2f1a; margin: 0 0 24px; font-weight: 700; }
+
+  .question { margin-bottom: 24px; }
+  .question p { font-size: 16px; font-weight: 600; color: #1a2f1a; margin-bottom: 12px; }
+  .option-btn {
+    display: block; width: 100%; padding: 12px 16px; border-radius: 10px;
+    border: 2px solid #e0e0e0; background: white; cursor: pointer; text-align: left;
+    font-size: 15px; font-family: 'DM Sans', sans-serif; color: #1a2f1a;
+    transition: all 0.2s; font-weight: 400; margin-bottom: 8px;
+  }
+  .option-btn.selected { border-color: #2E7D32; background: #E8F5E9; font-weight: 600; }
+  .option-btn:hover:not(.selected) { border-color: #a5d6a7; }
+
+  /* ── Baseline / Progress ── */
+  #baseline, #progress { flex-direction: column; align-items: center; padding: 24px 16px; background: #f8faf8; }
+  .result-wrap { max-width: 520px; width: 100%; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 28px; color: #1a2f1a; margin: 0 0 8px; font-weight: 700; text-align: center; }
+  .result-sub { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
+  .bonus-text { text-align: center; color: #2E7D32; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .landscape-wrap {
+    border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1); transition: transform 0.8s ease;
+  }
+  .landscape-wrap svg { display: block; width: 100%; }
+  .score-card {
+    background: white; border-radius: 16px; padding: 20px; margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .score-card h3 { font-size: 16px; font-weight: 700; color: #1a2f1a; margin: 0 0 16px; }
+  .bar-row { margin-bottom: 12px; }
+  .bar-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .bar-label { font-size: 13px; font-weight: 600; color: #1a2f1a; }
+  .bar-val { font-size: 13px; font-weight: 700; }
+  .bar-track { height: 8px; border-radius: 4px; background: #e0e0e0; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .overall-row { border-top: 1px solid #eee; padding-top: 12px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .overall-label { font-size: 15px; font-weight: 700; color: #1a2f1a; }
+  .overall-val { font-size: 20px; font-weight: 800; color: #2E7D32; }
+
+  /* ── Goals ── */
+  #goals { flex-direction: column; align-items: center; padding: 24px 16px; background: #f8faf8; }
+  .goals-wrap { max-width: 520px; width: 100%; }
+  .goal-day-label { font-size: 13px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .goal-title { font-family: 'Playfair Display', serif; font-size: 28px; color: #1a2f1a; margin: 0 0 8px; font-weight: 700; }
+  .goal-desc { color: #666; font-size: 14px; margin-bottom: 20px; }
+  .goal-card {
+    padding: 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s;
+    border: 2px solid #e0e0e0; background: white; display: flex; align-items: center;
+    gap: 12px; margin-bottom: 10px;
+  }
+  .goal-card.done { border-color: #2E7D32; background: #E8F5E9; }
+  .goal-check {
+    width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; background: #f5f5f5; color: #bbb; font-size: 16px;
+    font-weight: 700; transition: all 0.3s; flex-shrink: 0;
+  }
+  .goal-card.done .goal-check { background: #2E7D32; color: white; }
+  .goal-text { font-size: 14px; font-weight: 500; color: #1a2f1a; margin: 0; }
+  .goal-card.done .goal-text { text-decoration: line-through; }
+  .goal-meta { font-size: 12px; color: #666; margin: 4px 0 0; }
+  .btn-secondary {
+    width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #e0e0e0;
+    background: transparent; color: #666; font-size: 14px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ SPLASH ════════ -->
+<div id="splash" class="screen active">
+  <div class="icon">🌱</div>
+  <h1>Generation 100</h1>
+  <p class="sub">How will your choices today shape the world 100 years from now?</p>
+  <p class="sub2">Take a 7-day survey to discover your environmental baseline, then earn daily goals to grow your impact.</p>
+  <button class="btn-primary" onclick="showScreen('survey'); renderSurvey();">Start Your Journey</button>
+</div>
+
+<!-- ════════ SURVEY ════════ -->
+<div id="survey" class="screen">
+  <div class="survey-wrap" id="survey-content"></div>
+</div>
+
+<!-- ════════ BASELINE ════════ -->
+<div id="baseline" class="screen">
+  <div class="result-wrap" id="baseline-content"></div>
+</div>
+
+<!-- ════════ GOALS ════════ -->
+<div id="goals" class="screen">
+  <div class="goals-wrap" id="goals-content"></div>
+</div>
+
+<!-- ════════ PROGRESS ════════ -->
+<div id="progress" class="screen">
+  <div class="result-wrap" id="progress-content"></div>
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const CATEGORIES = ["energy", "consumption", "water"];
+const CAT_LABELS = { energy: "Energy & Transport", consumption: "Consumption & Waste", water: "Water Usage" };
+const CAT_ICONS = { energy: "\u26A1", consumption: "\u267B\uFE0F", water: "\uD83D\uDCA7" };
+
+const SURVEY_DAYS = [
+  { day:1, title:"Your Daily Commute", questions:[
+    {id:"q1_1",cat:"energy",text:"How do you usually get to school or work?",options:[{label:"Walk or bike",score:10},{label:"Public transit",score:7},{label:"Carpool",score:5},{label:"Drive alone",score:2}]},
+    {id:"q1_2",cat:"consumption",text:"How often do you bring a reusable bag when shopping?",options:[{label:"Always",score:10},{label:"Usually",score:7},{label:"Sometimes",score:4},{label:"Never",score:1}]},
+    {id:"q1_3",cat:"water",text:"How long are your typical showers?",options:[{label:"Under 5 min",score:10},{label:"5-10 min",score:7},{label:"10-15 min",score:4},{label:"Over 15 min",score:1}]}
+  ]},
+  { day:2, title:"Home Energy", questions:[
+    {id:"q2_1",cat:"energy",text:"Do you turn off lights when leaving a room?",options:[{label:"Always",score:10},{label:"Usually",score:7},{label:"Sometimes",score:4},{label:"Rarely",score:1}]},
+    {id:"q2_2",cat:"energy",text:"What type of light bulbs do you primarily use?",options:[{label:"LED",score:10},{label:"CFL",score:7},{label:"Mixed",score:5},{label:"Incandescent / not sure",score:2}]},
+    {id:"q2_3",cat:"water",text:"Do you run the faucet while brushing your teeth?",options:[{label:"Never",score:10},{label:"Sometimes",score:5},{label:"Always",score:1}]}
+  ]},
+  { day:3, title:"What You Buy", questions:[
+    {id:"q3_1",cat:"consumption",text:"How often do you buy second-hand or thrifted items?",options:[{label:"Frequently",score:10},{label:"Sometimes",score:6},{label:"Rarely",score:3},{label:"Never",score:1}]},
+    {id:"q3_2",cat:"consumption",text:"How do you handle items you no longer need?",options:[{label:"Donate or sell",score:10},{label:"Recycle if possible",score:7},{label:"Throw away",score:2}]},
+    {id:"q3_3",cat:"energy",text:"Do you unplug electronics when not in use?",options:[{label:"Always",score:10},{label:"Sometimes",score:5},{label:"Never",score:1}]}
+  ]},
+  { day:4, title:"Water Habits", questions:[
+    {id:"q4_1",cat:"water",text:"How do you water plants or your lawn (if applicable)?",options:[{label:"Collected rainwater",score:10},{label:"Hose in early morning/evening",score:7},{label:"Sprinkler midday",score:3},{label:"N/A",score:8}]},
+    {id:"q4_2",cat:"water",text:"Do you run the dishwasher / wash dishes with a full load?",options:[{label:"Always full loads",score:10},{label:"Usually",score:7},{label:"Often partial loads",score:3}]},
+    {id:"q4_3",cat:"consumption",text:"How many single-use plastic bottles do you use per week?",options:[{label:"None, I use reusable",score:10},{label:"1-3",score:6},{label:"4-7",score:3},{label:"8+",score:1}]}
+  ]},
+  { day:5, title:"Getting Around", questions:[
+    {id:"q5_1",cat:"energy",text:"For trips under 2 miles, how do you usually travel?",options:[{label:"Walk or bike",score:10},{label:"Scooter or skateboard",score:8},{label:"Drive",score:2}]},
+    {id:"q5_2",cat:"energy",text:"How often do you fly per year?",options:[{label:"Never",score:10},{label:"1-2 times",score:7},{label:"3-5 times",score:4},{label:"6+ times",score:1}]},
+    {id:"q5_3",cat:"consumption",text:"Do you bring your own container for takeout or leftovers?",options:[{label:"Always",score:10},{label:"Sometimes",score:5},{label:"Never",score:1}]}
+  ]},
+  { day:6, title:"Waste & Recycling", questions:[
+    {id:"q6_1",cat:"consumption",text:"Do you sort your recycling?",options:[{label:"Yes, always",score:10},{label:"When it's convenient",score:5},{label:"No",score:1}]},
+    {id:"q6_2",cat:"consumption",text:"Do you compost food scraps?",options:[{label:"Yes",score:10},{label:"Sometimes",score:5},{label:"No",score:1}]},
+    {id:"q6_3",cat:"water",text:"Do you ever reuse water (e.g., pasta water for plants)?",options:[{label:"Regularly",score:10},{label:"Occasionally",score:5},{label:"Never",score:1}]}
+  ]},
+  { day:7, title:"The Big Picture", questions:[
+    {id:"q7_1",cat:"energy",text:"Does your household use any renewable energy?",options:[{label:"Solar / wind at home",score:10},{label:"Green energy plan from provider",score:7},{label:"No / not sure",score:2}]},
+    {id:"q7_2",cat:"consumption",text:"How often do you repair items instead of replacing them?",options:[{label:"Whenever I can",score:10},{label:"Sometimes",score:6},{label:"Almost never",score:2}]},
+    {id:"q7_3",cat:"water",text:"Have you installed any water-saving fixtures (low-flow showerhead, etc.)?",options:[{label:"Yes, several",score:10},{label:"One or two",score:6},{label:"None / not sure",score:2}]}
+  ]}
+];
+
+const DAILY_GOALS_POOL = {
+  energy: [
+    {text:"Walk or bike instead of driving for one trip today",points:15},
+    {text:"Unplug 3 devices you aren't using right now",points:10},
+    {text:"Turn off all lights when leaving each room today",points:10},
+    {text:"Air dry your clothes instead of using the dryer",points:15},
+    {text:"Keep your thermostat 2 degrees closer to outside temp",points:12},
+    {text:"Take public transit or carpool for one trip",points:12},
+    {text:"Switch one incandescent bulb to LED",points:10},
+    {text:"Limit screen time by 1 hour to save energy",points:8},
+  ],
+  consumption: [
+    {text:"Use a reusable bag for all purchases today",points:10},
+    {text:"Repair one item instead of throwing it away",points:15},
+    {text:"Sort and properly recycle everything today",points:10},
+    {text:"Donate one item you no longer need",points:12},
+    {text:"Bring your own container for any takeout",points:10},
+    {text:"Avoid buying anything wrapped in single-use plastic",points:12},
+    {text:"Compost your food scraps today",points:15},
+    {text:"Buy one item second-hand instead of new",points:12},
+  ],
+  water: [
+    {text:"Take a shower under 5 minutes today",points:12},
+    {text:"Turn off the faucet while brushing your teeth",points:8},
+    {text:"Only run the dishwasher with a full load",points:10},
+    {text:"Collect and reuse water (pasta water, rinse water, etc.)",points:15},
+    {text:"Fix a dripping faucet or running toilet",points:15},
+    {text:"Water plants in early morning or evening only",points:10},
+    {text:"Use a bucket instead of a hose for washing",points:12},
+    {text:"Avoid running water while washing dishes by hand",points:10},
+  ]
+};
+
+const STAGE_NAMES = ["Barren Wasteland","First Sprouts","Young Growth","Thriving Grove","Lush Forest","Paradise Restored"];
+const STAGE_DESCS = [
+  "The land is dry and lifeless. Your journey begins here.",
+  "Tiny green shoots push through the cracked earth.",
+  "A young sapling stands tall. Grass begins to spread.",
+  "The tree grows strong. Wildflowers dot the landscape.",
+  "A canopy forms. Wildlife returns to the thriving ecosystem.",
+  "A full paradise. Crystal water, towering tree, abundant life."
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+
+let currentDay = 0;
+let answers = {};
+let catScores = { energy: 0, consumption: 0, water: 0 };
+let overallScore = 0;
+let dailyGoals = [];
+let completedGoals = new Set();
+let allCompletedTexts = [];
+let goalDay = 1;
+let bonusPoints = 0;
+
+// ─── UTILITY ─────────────────────────────────────────────────────────────────
+
+function getStage(score) {
+  if (score < 15) return 0;
+  if (score < 30) return 1;
+  if (score < 45) return 2;
+  if (score < 60) return 3;
+  if (score < 75) return 4;
+  return 5;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function computeScores() {
+  const catTotals = { energy: [], consumption: [], water: [] };
+  for (const dayData of SURVEY_DAYS) {
+    for (const q of dayData.questions) {
+      if (answers[q.id] !== undefined) {
+        catTotals[q.cat].push(q.options[answers[q.id]].score);
+      }
+    }
+  }
+  const scores = {};
+  for (const cat of CATEGORIES) {
+    const arr = catTotals[cat];
+    scores[cat] = arr.length > 0 ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length * 10) : 0;
+  }
+  const overall = Math.round((scores.energy + scores.consumption + scores.water) / 3);
+  return { scores, overall };
+}
+
+function barColor(pct) {
+  if (pct >= 70) return "#2E7D32";
+  if (pct >= 40) return "#F9A825";
+  return "#C62828";
+}
+
+function generateDailyGoals() {
+  const sorted = Object.entries(catScores).sort((a, b) => a[1] - b[1]);
+  const goals = [];
+  const used = new Set(allCompletedTexts);
+  for (const [cat] of sorted) {
+    const pool = DAILY_GOALS_POOL[cat].filter(g => !used.has(g.text));
+    if (pool.length > 0) goals.push({ ...pool[Math.floor(Math.random() * pool.length)], cat });
+  }
+  for (const [cat] of sorted) {
+    if (goals.length >= 4) break;
+    const pool = DAILY_GOALS_POOL[cat].filter(g => !used.has(g.text) && !goals.find(x => x.text === g.text));
+    if (pool.length > 0) goals.push({ ...pool[Math.floor(Math.random() * pool.length)], cat });
+  }
+  return goals.slice(0, 4);
+}
+
+// ─── LANDSCAPE SVG ───────────────────────────────────────────────────────────
+
+function buildLandscapeSVG(stage, score) {
+  const s = Math.min(stage, 5);
+  const skyColors = [["#8B7355","#C4A87C"],["#7A8B6F","#B5C4A0"],["#5B8FA8","#A0D2DB"],["#4A90D9","#87CEEB"],["#2E7BD5","#6EC6FF"],["#1E6BC4","#56B4F9"]];
+  const groundColors = [["#8B6914","#6B4F12"],["#7A8B3F","#5A6B2F"],["#4CAF50","#388E3C"],["#43A047","#2E7D32"],["#388E3C","#1B5E20"],["#2E7D32","#145214"]];
+
+  let svg = `<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${skyColors[s][0]}"/><stop offset="100%" stop-color="${skyColors[s][1]}"/></linearGradient>
+    <linearGradient id="gndG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${groundColors[s][0]}"/><stop offset="100%" stop-color="${groundColors[s][1]}"/></linearGradient>
+    <radialGradient id="sunG"><stop offset="0%" stop-color="#FFE082"/><stop offset="100%" stop-color="#FFD54F" stop-opacity="0"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="600" height="400" fill="url(#skyG)"/>`;
+
+  // Sun
+  if (s >= 2) {
+    const op = s >= 3 ? 1 : 0.5;
+    svg += `<g opacity="${op}"><circle cx="480" cy="70" r="50" fill="url(#sunG)"/><circle cx="480" cy="70" r="25" fill="#FFF176" filter="url(#glow)"/></g>`;
+  }
+  // Clouds
+  if (s >= 2) {
+    const cop = s >= 2 ? 0.5 : 0;
+    svg += `<g opacity="${cop}"><ellipse cx="120" cy="60" rx="50" ry="18" fill="white" opacity="0.7"/><ellipse cx="145" cy="50" rx="35" ry="14" fill="white" opacity="0.6"/><ellipse cx="400" cy="90" rx="40" ry="15" fill="white" opacity="0.5"/></g>`;
+  }
+  // Ground
+  svg += `<ellipse cx="300" cy="350" rx="350" ry="100" fill="url(#gndG)"/><rect y="310" width="600" height="90" fill="${groundColors[s][1]}"/>`;
+  // Water
+  if (s >= 2) {
+    const wop = Math.min((s - 1) * 0.25, 1);
+    svg += `<g opacity="${wop}"><ellipse cx="460" cy="340" rx="70" ry="20" fill="#4FC3F7" opacity="0.6"/><ellipse cx="460" cy="338" rx="55" ry="12" fill="#81D4FA" opacity="0.4"/></g>`;
+  }
+  // Grass
+  const grassCount = s >= 1 ? s * 8 : 0;
+  for (let i = 0; i < grassCount; i++) {
+    const x = 40 + (i * 520 / grassCount) + (i % 3) * 10;
+    const h = 10 + (i % 5) * 5;
+    const gc = s >= 3 ? "#43A047" : "#7CB342";
+    svg += `<line x1="${x}" y1="320" x2="${x + (i%2?3:-3)}" y2="${320 - h}" stroke="${gc}" stroke-width="2" stroke-linecap="round"/>`;
+  }
+  // Tree
+  const treeScale = s === 0 ? 0.5 : Math.min(0.2 + s * 0.18, 1.1);
+  svg += `<g transform="translate(200,310) scale(${treeScale})">`;
+  svg += `<rect x="-8" y="-120" width="16" height="120" rx="4" fill="#5D4037"/>`;
+  if (s >= 2) {
+    svg += `<rect x="-5" y="-100" width="10" height="40" rx="3" fill="#4E342E" transform="rotate(-30,0,-80)"/>`;
+    svg += `<rect x="-5" y="-90" width="10" height="35" rx="3" fill="#4E342E" transform="rotate(25,0,-70)"/>`;
+  }
+  if (s >= 3) svg += `<rect x="-4" y="-110" width="8" height="30" rx="3" fill="#4E342E" transform="rotate(-15,0,-95)"/>`;
+  // Leaves
+  const leafCount = s <= 1 ? 0 : Math.min((s - 1) * 6, 24);
+  if (leafCount > 0) {
+    const cols = ["#66BB6A","#43A047","#2E7D32"];
+    for (let i = 0; i < leafCount; i++) {
+      const angle = (i / leafCount) * Math.PI * 2;
+      const r = 30 + (i % 3) * 15;
+      const cx = Math.cos(angle) * r;
+      const cy = -130 + Math.sin(angle) * r * 0.6;
+      const sz = 12 + (i % 4) * 4;
+      svg += `<circle cx="${cx}" cy="${cy}" r="${sz}" fill="${cols[i%3]}" opacity="0.85"/>`;
+    }
+    svg += `<circle cx="0" cy="-135" r="${20 + s * 5}" fill="#388E3C" opacity="0.7"/>`;
+  }
+  // Bare stick at stage 0
+  if (s === 0) {
+    svg += `<line x1="-3" y1="-80" x2="-15" y2="-100" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>`;
+    svg += `<line x1="3" y1="-70" x2="12" y2="-88" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>`;
+  }
+  svg += `</g>`;
+  // Flowers
+  const flowerCount = s >= 3 ? (s - 2) * 4 : 0;
+  const flowerCols = ["#E91E63","#FF9800","#9C27B0","#FFEB3B","#FF5722"];
+  for (let i = 0; i < flowerCount; i++) {
+    const x = 60 + (i * 480 / flowerCount);
+    svg += `<g transform="translate(${x},${325-(i%3)*3})"><line x1="0" y1="0" x2="0" y2="12" stroke="#4CAF50" stroke-width="2"/><circle cx="0" cy="0" r="4" fill="${flowerCols[i%5]}"/><circle cx="0" cy="0" r="2" fill="#FFF59D"/></g>`;
+  }
+  // Birds
+  const birdCount = s >= 4 ? (s - 3) * 2 : 0;
+  for (let i = 0; i < birdCount; i++) {
+    svg += `<g transform="translate(${100+i*120},${40+i*20})"><path d="M-8,0 Q-4,-5 0,0 Q4,-5 8,0" fill="none" stroke="#37474F" stroke-width="2"/></g>`;
+  }
+  // Label
+  svg += `<text x="300" y="390" text-anchor="middle" fill="white" font-size="13" font-family="'DM Sans',sans-serif" opacity="0.9">${STAGE_NAMES[s]} — Score: ${score}/100</text>`;
+  svg += `</svg>`;
+  return svg;
+}
+
+// ─── RENDER FUNCTIONS ────────────────────────────────────────────────────────
+
+function renderSurvey() {
+  const dayData = SURVEY_DAYS[currentDay];
+  let html = `<div class="progress-bar">`;
+  for (let i = 0; i < 7; i++) {
+    const cls = i < currentDay ? "seg done" : i === currentDay ? "seg current" : "seg";
+    html += `<div class="${cls}"></div>`;
+  }
+  html += `</div>`;
+  html += `<p class="day-label">Day ${dayData.day} of 7</p>`;
+  html += `<h2 class="day-title">${dayData.title}</h2>`;
+
+  for (const q of dayData.questions) {
+    html += `<div class="question"><p>${q.text}</p>`;
+    q.options.forEach((opt, i) => {
+      const sel = answers[q.id] === i ? " selected" : "";
+      html += `<button class="option-btn${sel}" onclick="selectAnswer('${q.id}',${i})">${opt.label}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  const allAnswered = dayData.questions.every(q => answers[q.id] !== undefined);
+  const btnLabel = currentDay < 6 ? `Continue to Day ${currentDay + 2}` : "See My Baseline";
+  html += `<button class="btn-primary btn-full" onclick="nextDay()" ${allAnswered ? "" : "disabled"}>${btnLabel}</button>`;
+
+  document.getElementById('survey-content').innerHTML = html;
+}
+
+function selectAnswer(qId, idx) {
+  answers[qId] = idx;
+  renderSurvey();
+}
+
+function nextDay() {
+  if (currentDay < 6) {
+    currentDay++;
+    renderSurvey();
+    window.scrollTo(0, 0);
+  } else {
+    const result = computeScores();
+    catScores = result.scores;
+    overallScore = result.overall;
+    renderBaseline();
+    showScreen('baseline');
+  }
+}
+
+function renderScoreCard() {
+  let html = `<h3>Category Breakdown</h3>`;
+  for (const cat of CATEGORIES) {
+    const val = catScores[cat];
+    const pct = Math.min(val, 100);
+    const col = barColor(pct);
+    html += `<div class="bar-row"><div class="bar-header"><span class="bar-label">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span><span class="bar-val" style="color:${col}">${Math.round(val)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+  }
+  html += `<div class="overall-row"><span class="overall-label">Overall Score</span><span class="overall-val">${overallScore}</span></div>`;
+  return html;
+}
+
+function renderBaseline() {
+  const stage = getStage(overallScore);
+  let html = `<h2 class="result-title">Your Environmental Baseline</h2>`;
+  html += `<p class="result-sub">${STAGE_DESCS[stage]}</p>`;
+  html += `<div class="landscape-wrap">${buildLandscapeSVG(stage, overallScore)}</div>`;
+  html += `<div class="score-card">${renderScoreCard()}</div>`;
+  html += `<button class="btn-primary btn-full" onclick="startGoals()">Start Daily Goals</button>`;
+  document.getElementById('baseline-content').innerHTML = html;
+}
+
+function startGoals() {
+  dailyGoals = generateDailyGoals();
+  completedGoals = new Set();
+  renderGoals();
+  showScreen('goals');
+}
+
+function renderGoals() {
+  const stage = getStage(overallScore);
+  let html = `<p class="goal-day-label">Goal Day ${goalDay}</p>`;
+  html += `<h2 class="goal-title">Today's Challenges</h2>`;
+  html += `<p class="goal-desc">Complete as many as you can. Each goal brings your ecosystem closer to thriving.</p>`;
+  html += `<div class="landscape-wrap" style="border-radius:12px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08)">${buildLandscapeSVG(stage, overallScore)}</div>`;
+
+  dailyGoals.forEach((goal, i) => {
+    const done = completedGoals.has(i);
+    html += `<div class="goal-card${done ? " done" : ""}" onclick="toggleGoal(${i})">
+      <div class="goal-check">${done ? "✓" : "○"}</div>
+      <div><p class="goal-text">${goal.text}</p><p class="goal-meta">${CAT_ICONS[goal.cat]} ${CAT_LABELS[goal.cat]} — +${goal.points} pts</p></div>
+    </div>`;
+  });
+
+  html += `<button class="btn-primary btn-full" onclick="submitGoals()" ${completedGoals.size > 0 ? "" : "disabled"}>Submit (${completedGoals.size}/${dailyGoals.length} completed)</button>`;
+  html += `<button class="btn-secondary" onclick="viewProgress()">View My Progress</button>`;
+  document.getElementById('goals-content').innerHTML = html;
+}
+
+function toggleGoal(idx) {
+  if (completedGoals.has(idx)) completedGoals.delete(idx);
+  else completedGoals.add(idx);
+  renderGoals();
+}
+
+function submitGoals() {
+  let earned = 0;
+  const texts = [];
+  completedGoals.forEach(idx => {
+    earned += dailyGoals[idx].points;
+    texts.push(dailyGoals[idx].text);
+  });
+  bonusPoints += earned;
+  allCompletedTexts = allCompletedTexts.concat(texts);
+  overallScore = Math.min(100, overallScore + Math.round(earned / 4));
+  completedGoals.forEach(idx => {
+    const g = dailyGoals[idx];
+    catScores[g.cat] = Math.min(100, catScores[g.cat] + Math.round(g.points / 3));
+  });
+  goalDay++;
+  renderProgress();
+  showScreen('progress');
+}
+
+function viewProgress() {
+  renderProgress();
+  showScreen('progress');
+}
+
+function renderProgress() {
+  const stage = getStage(overallScore);
+  let html = `<h2 class="result-title">Your Impact is Growing</h2>`;
+  if (bonusPoints > 0) html += `<p class="bonus-text">Goal Day ${goalDay - 1} Complete! +${bonusPoints} bonus points earned</p>`;
+  html += `<p class="result-sub">${STAGE_DESCS[stage]}</p>`;
+  html += `<div class="landscape-wrap">${buildLandscapeSVG(stage, overallScore)}</div>`;
+  html += `<div class="score-card">${renderScoreCard()}</div>`;
+  html += `<button class="btn-primary btn-full" onclick="startGoals()">Next Day's Goals</button>`;
+  document.getElementById('progress-content').innerHTML = html;
+}
+</script>
+</body>
+</html>
