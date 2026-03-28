@@ -105,6 +105,25 @@
   .ach-info .ach-name { font-size: 13px; font-weight: 700; color: #C8E6C9; }
   .ach-info .ach-req { font-size: 11px; color: #5a7a5a; }
   .ach-item.unlocked .ach-info .ach-req { color: #66BB6A; }
+  .ach-popup { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); z-index: 999; background: rgba(10,30,10,0.95); border: 1.5px solid rgba(46,125,50,0.4); border-radius: 14px; padding: 16px 24px; display: flex; align-items: center; gap: 14px; box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 30px rgba(46,125,50,0.15); transition: top 0.5s ease; max-width: 400px; }
+  .ach-popup.show { top: 24px; }
+  .ach-popup .popup-icon { font-size: 2rem; flex-shrink: 0; }
+  .ach-popup .popup-info { flex: 1; }
+  .ach-popup .popup-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #66BB6A; font-weight: 700; margin-bottom: 2px; }
+  .ach-popup .popup-name { font-size: 15px; font-weight: 700; color: #E8F5E9; margin-bottom: 2px; }
+  .ach-popup .popup-desc { font-size: 11px; color: #8aaa8a; line-height: 1.4; }
+  .trophy-btn { position: fixed; bottom: 24px; right: 24px; z-index: 100; width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid rgba(46,125,50,0.3); background: rgba(10,30,10,0.9); backdrop-filter: blur(10px); cursor: pointer; font-size: 22px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.4); transition: all 0.3s; }
+  .trophy-btn:hover { border-color: #66BB6A; transform: scale(1.1); box-shadow: 0 4px 20px rgba(46,125,50,0.3); }
+  .trophy-btn .badge-count { position: absolute; top: -4px; right: -4px; background: #2E7D32; color: white; font-size: 10px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; }
+  #achievements { flex-direction: column; align-items: center; padding: 32px 16px; background: linear-gradient(180deg, #0a0a08, #0d1a0d); }
+  .ach-wrap { max-width: 560px; width: 100%; }
+  .ach-back { display: inline-flex; align-items: center; gap: 6px; color: #6a8a6a; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 20px; background: none; border: none; font-family: 'DM Sans', sans-serif; transition: color 0.2s; }
+  .ach-back:hover { color: #A5D6A7; }
+  .ach-header { margin-bottom: 24px; }
+  .ach-header h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: #E8F5E9; font-weight: 700; margin-bottom: 6px; }
+  .ach-header p { color: #6a8a6a; font-size: 14px; }
+  .ach-progress-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; margin-bottom: 24px; }
+  .ach-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #66BB6A, #2E7D32); transition: width 0.5s ease; }
 
   #goals { flex-direction: column; align-items: center; padding: 32px 16px; background: linear-gradient(180deg, #0a0a08, #0d1a0d); }
   .goals-wrap { max-width: 560px; width: 100%; }
@@ -140,6 +159,9 @@
 <div id="survey" class="screen"><div class="survey-wrap" id="survey-content"></div></div>
 <div id="results" class="screen"><div class="results-wrap" id="results-content"></div></div>
 <div id="goals" class="screen"><div class="goals-wrap" id="goals-content"></div></div>
+<div id="achievements" class="screen"><div class="ach-wrap" id="ach-content"></div></div>
+<div class="ach-popup" id="achPopup"><div class="popup-icon" id="popupIcon"></div><div class="popup-info"><div class="popup-label">Achievement Unlocked!</div><div class="popup-name" id="popupName"></div><div class="popup-desc" id="popupDesc"></div></div></div>
+<button class="trophy-btn" id="trophyBtn" onclick="showAchievements()">🏆<div class="badge-count" id="trophyCount">0</div></button>
 
 <script>
 const CATEGORIES=["energy","consumption","water"];
@@ -187,19 +209,65 @@ function getPlayerTitle(s){
 }
 
 const ACHIEVEMENTS=[
-  {icon:'🏁',name:'First Steps',req:'Complete the baseline survey',check:()=>goalDay>=1},
-  {icon:'📋',name:'Goal Setter',req:'Complete your first daily goal',check:()=>allCompletedTexts.length>=1},
-  {icon:'🔥',name:'On a Roll',req:'Complete 3 days of goals',check:()=>goalDay>3},
-  {icon:'⚡',name:'Energy Saver',req:'Reach 50 in Energy',check:()=>catScores.energy>=50},
-  {icon:'♻️',name:'Waste Warrior',req:'Reach 50 in Consumption',check:()=>catScores.consumption>=50},
-  {icon:'💧',name:'Water Guardian',req:'Reach 50 in Water',check:()=>catScores.water>=50},
-  {icon:'📈',name:'Level Up',req:'Improve your score by 20 points',check:()=>bonusPoints>=20},
-  {icon:'🌿',name:'Sustainable Steward',req:'Reach an overall score of 55',check:()=>overallScore>=55},
-  {icon:'💪',name:'Dedicated',req:'Complete 7 days of goals',check:()=>goalDay>7},
-  {icon:'🌳',name:'Eco Champion',req:'Reach an overall score of 70',check:()=>overallScore>=70},
-  {icon:'🏆',name:'Unstoppable',req:'Complete 20 total goals',check:()=>allCompletedTexts.length>=20},
-  {icon:'✨',name:'Paradise Found',req:'Reach a perfect score of 100',check:()=>overallScore>=100},
+  {icon:'🏁',name:'First Steps',req:'Complete the baseline survey',desc:'Every journey starts somewhere. You took the first step toward understanding your environmental impact.',check:()=>goalDay>=1},
+  {icon:'📋',name:'Goal Setter',req:'Complete your first daily goal',desc:'Actions speak louder than words. You completed your first challenge and started making a real difference.',check:()=>allCompletedTexts.length>=1},
+  {icon:'🔥',name:'On a Roll',req:'Complete 3 days of goals',desc:'Three days of consistent effort. Habits are forming. The landscape is starting to notice.',check:()=>goalDay>3},
+  {icon:'⚡',name:'Energy Saver',req:'Reach 50 in Energy',desc:'You have cut your energy footprint in half. Power plants are breathing a sigh of relief.',check:()=>catScores.energy>=50},
+  {icon:'♻️',name:'Waste Warrior',req:'Reach 50 in Consumption',desc:'Less waste, more purpose. You are rethinking what you buy and how you use it.',check:()=>catScores.consumption>=50},
+  {icon:'💧',name:'Water Guardian',req:'Reach 50 in Water',desc:'Every drop counts, and you are making sure none go to waste. Rivers thank you.',check:()=>catScores.water>=50},
+  {icon:'📈',name:'Level Up',req:'Improve your score by 20 points',desc:'Serious progress. Your landscape has visibly transformed from where it started.',check:()=>bonusPoints>=20},
+  {icon:'🌿',name:'Sustainable Steward',req:'Reach an overall score of 55',desc:'You have crossed into positive territory. Your daily choices are building a better future.',check:()=>overallScore>=55},
+  {icon:'💪',name:'Dedicated',req:'Complete 7 days of goals',desc:'A full week of commitment. This is no longer a one-time thing. This is who you are now.',check:()=>goalDay>7},
+  {icon:'🌳',name:'Eco Champion',req:'Reach an overall score of 70',desc:'The world 100 years from now is looking greener because of you. Trees are growing, wildlife is returning.',check:()=>overallScore>=70},
+  {icon:'🏆',name:'Unstoppable',req:'Complete 20 total goals',desc:'Twenty challenges conquered. You are a force of nature, literally.',check:()=>allCompletedTexts.length>=20},
+  {icon:'✨',name:'Paradise Found',req:'Reach a perfect score of 100',desc:'You did it. Maximum impact. If everyone followed your lead, 2126 would be a solarpunk utopia.',check:()=>overallScore>=100},
 ];
+
+let previouslyUnlocked=new Set();
+let lastScreen='results';
+
+function checkNewAchievements(){
+  const newUnlocks=[];
+  for(const a of ACHIEVEMENTS){
+    if(a.check()&&!previouslyUnlocked.has(a.name)){
+      previouslyUnlocked.add(a.name);
+      newUnlocks.push(a);
+    }
+  }
+  if(newUnlocks.length>0)showPopupQueue(newUnlocks,0);
+  updateTrophyBtn();
+}
+
+function showPopupQueue(arr,idx){
+  if(idx>=arr.length)return;
+  const a=arr[idx];
+  document.getElementById('popupIcon').textContent=a.icon;
+  document.getElementById('popupName').textContent=a.name;
+  document.getElementById('popupDesc').textContent=a.desc;
+  const popup=document.getElementById('achPopup');
+  popup.classList.add('show');
+  setTimeout(()=>{popup.classList.remove('show');setTimeout(()=>showPopupQueue(arr,idx+1),400);},3000);
+}
+
+function updateTrophyBtn(){
+  const btn=document.getElementById('trophyBtn');
+  const count=ACHIEVEMENTS.filter(a=>a.check()).length;
+  document.getElementById('trophyCount').textContent=count;
+  btn.style.display='flex';
+}
+
+function showAchievements(){
+  const current=document.querySelector('.screen.active');
+  if(current)lastScreen=current.id;
+  const unlocked=ACHIEVEMENTS.filter(a=>a.check()).length;
+  let h=`<button class="ach-back" onclick="showScreen('${lastScreen}')">&larr; Back</button>`;
+  h+=`<div class="ach-header"><h2>🏆 Achievements</h2><p>${unlocked} of ${ACHIEVEMENTS.length} unlocked</p></div>`;
+  h+=`<div class="ach-progress-bar"><div class="ach-progress-fill" style="width:${(unlocked/ACHIEVEMENTS.length)*100}%"></div></div>`;
+  for(const a of ACHIEVEMENTS){const u=a.check();
+    h+=`<div class="ach-item ${u?'unlocked':'locked'}"><div class="ach-icon">${u?a.icon:'🔒'}</div><div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-req">${u?a.desc:a.req}</div></div></div>`;}
+  document.getElementById('ach-content').innerHTML=h;
+  showScreen('achievements');
+}
 
 // ═══ LANDSCAPE CANVAS RENDERER ═══
 
@@ -364,16 +432,10 @@ function renderResults(){
   for(const cat of CATEGORIES){const v=catScores[cat],p=Math.min(v,100),c=barColor(p);
     h+=`<div class="bar-row"><div class="bar-header"><span class="bar-label">${CAT_ICONS[cat]} ${CAT_LABELS[cat]}</span><span class="bar-val" style="color:${c}">${Math.round(v)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${c}"></div></div></div>`;}
   h+=`<div class="overall-row"><span class="overall-label">Overall Score</span><span class="overall-val" style="color:${st.color}">${overallScore}/100</span></div></div>`;
-  const unlocked=ACHIEVEMENTS.filter(a=>a.check()).length;
-  h+=`<div class="achievements-card"><h3>Achievements (${unlocked}/${ACHIEVEMENTS.length})</h3>`;
-  for(const a of ACHIEVEMENTS){const u=a.check();
-    h+=`<div class="ach-item ${u?'unlocked':'locked'}"><div class="ach-icon">${u?a.icon:'🔒'}</div><div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-req">${u?'Unlocked!':a.req}</div></div></div>`;}
-  h+=`</div>`;
   h+=overallScore>=100?`<button class="btn-main btn-full" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)" disabled>🌍 Paradise Achieved! Score: 100/100</button>`:`<button class="btn-main btn-full" onclick="startGoals()">${goalDay>1?"Next Day's Goals":"Start Daily Goals"}</button>`;
   document.getElementById('results-content').innerHTML=h;
-  setTimeout(()=>renderLandscape(document.getElementById('mainCanvas'),overallScore),50);}
-
-function startGoals(){dailyGoals=generateDailyGoals();completedGoals=new Set();renderGoals();showScreen('goals');}
+  setTimeout(()=>renderLandscape(document.getElementById('mainCanvas'),overallScore),50);
+  checkNewAchievements();}
 
 function renderGoals(){
   let h=`<div class="goal-header"><p class="eyebrow">Goal Day ${goalDay}</p><h2>Today's Challenges</h2><p>Complete goals to improve your landscape.</p></div>`;
@@ -390,7 +452,7 @@ function toggleGoal(i){completedGoals.has(i)?completedGoals.delete(i):completedG
 function submitGoals(){let earned=0;const texts=[];completedGoals.forEach(i=>{earned+=dailyGoals[i].points;texts.push(dailyGoals[i].text);});
   bonusPoints+=earned;allCompletedTexts=allCompletedTexts.concat(texts);overallScore=Math.min(100,overallScore+Math.round(earned/4));
   completedGoals.forEach(i=>{const g=dailyGoals[i];catScores[g.cat]=Math.min(100,catScores[g.cat]+Math.round(g.points/3));});
-  goalDay++;renderResults();showScreen('results');}
+  goalDay++;renderResults();showScreen('results');checkNewAchievements();}
 </script>
 </body>
 </html>
