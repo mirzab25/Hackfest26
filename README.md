@@ -6,7 +6,7 @@
 - Donald
 - Dwayne
 - Chavelle
-- Grace
+- Hunter
 
 ##Stack
 - **Frontend:** React + Tailwind
