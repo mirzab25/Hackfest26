@@ -9,15 +9,15 @@
 - Hunter
 
 ##Stack
-- **Frontend:** React + Tailwind
+- **Frontend:** React or Netlify
 - **Backend:** Python (Flask)
-- **Database:** SQLite
-- **Deployment:** Netlify (frontend), Railway or Render (backend)
+- **Deployment:** Github Pages
 
 ## Project Structure
-- `/frontend` - React app
-- `/backend` - Flask API
+- `/frontend` - Website
+- `/backend` - Game
 - `/docs` - Notes, wireframes, planning
+- `/Stuff` - Images
 
 ## Useful Links
 - [React Docs](https://react.dev)
@@ -27,4 +27,4 @@
 - [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
 
 ## Theme
-TBD - 
+Sustainability & The Future - Generation 100 
