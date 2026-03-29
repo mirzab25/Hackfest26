@@ -260,7 +260,8 @@ function showAchievements(){
   const current=document.querySelector('.screen.active');
   if(current)lastScreen=current.id;
   const unlocked=ACHIEVEMENTS.filter(a=>a.check()).length;
-  let h=`<button class="ach-back" onclick="showScreen('${lastScreen}')">&larr; Back</button>`;
+  const goBack=lastScreen;
+  let h=`<button class="ach-back" onclick="showScreen('${goBack}');if('${goBack}'==='results'){renderResults();}">&larr; Back</button>`;
   h+=`<div class="ach-header"><h2>🏆 Achievements</h2><p>${unlocked} of ${ACHIEVEMENTS.length} unlocked</p></div>`;
   h+=`<div class="ach-progress-bar"><div class="ach-progress-fill" style="width:${(unlocked/ACHIEVEMENTS.length)*100}%"></div></div>`;
   for(const a of ACHIEVEMENTS){const u=a.check();
@@ -402,6 +403,8 @@ function generateDailyGoals(){const sorted=Object.entries(catScores).sort((a,b)=
   return goals.slice(0,4);}
 
 // ═══ RENDER FUNCTIONS ═══
+
+function startGoals(){dailyGoals=generateDailyGoals();completedGoals=new Set();renderGoals();showScreen('goals');}
 
 function startSurvey(){currentQ=0;answers={};renderSurveyQ();showScreen('survey');}
 
