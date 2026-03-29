@@ -258,7 +258,7 @@ function updateTrophyBtn(){
 
 function showAchievements(){
   const current=document.querySelector('.screen.active');
-  if(current)lastScreen=current.id;
+  if(current&&current.id!=='achievements')lastScreen=current.id;
   const unlocked=ACHIEVEMENTS.filter(a=>a.check()).length;
   const goBack=lastScreen;
   let h=`<button class="ach-back" onclick="showScreen('${goBack}');if('${goBack}'==='results'){renderResults();}">&larr; Back</button>`;
