@@ -336,7 +336,116 @@
     <li><a href="#demo">Demo</a></li>
     <li><a href="#tech">Tech</a></li>
     <li><a href="#team">Team</a></li>
+    <li>
+  <a href="#" id="managerTabBtn" onclick="toggleManagerDash(event)" style="
+    color: #c4a040;
+    border: 1px solid rgba(196,160,64,0.25);
+    background: rgba(196,160,64,0.06);
+    display: flex; align-items: center; gap: 6px;
+  ">
+    <span id="managerDot" style="width:6px;height:6px;border-radius:50%;background:#c4a040;display:inline-block;"></span>
+    <span id="managerTabLabel">Manager</span>
+  </a>
+</li>
   </ul>
+  <div id="managerDash" style="display:none; position:fixed; top:50px; left:0; right:0; z-index:199; background:#071209; border-bottom:1px solid #1a3020; padding:1.25rem 2rem; overflow-y:auto; max-height:calc(100vh - 50px);">
+
+  <div style="max-width:1100px; margin:0 auto;">
+
+    <!-- Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <div>
+        <div style="font-size:15px; font-weight:500; color:#c9a84c; display:flex; align-items:center; gap:8px;">
+          <span style="width:20px;height:1px;background:#c9a84c;display:inline-block;"></span>
+          Manager dashboard
+        </div>
+        <div style="font-size:11px; color:#4a6a42; margin-top:2px;">April 2026 · 3 departments · 18 workers</div>
+      </div>
+      <div onclick="toggleManagerDash(event)" style="font-size:18px; color:#4a6a42; cursor:pointer; padding:2px 10px; border-radius:4px; border:1px solid #1a3020; line-height:1.4;">✕</div>
+    </div>
+
+    <!-- KPIs -->
+    <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:1.25rem;">
+      <div style="background:#0c1a0e; border:1px solid #1a3020; border-radius:12px; padding:1rem; border-top:2px solid #c9a84c;">
+        <div style="font-size:10px; color:#4a6a42; text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;">Company avg</div>
+        <div style="font-size:22px; font-weight:500; color:#d4c090;">61<span style="font-size:12px;color:#4a6a42;">/100</span></div>
+        <div style="font-size:10px; color:#639922; margin-top:4px;">▲ 4 pts this month</div>
+      </div>
+      <div style="background:#0c1a0e; border:1px solid #1a3020; border-radius:12px; padding:1rem; border-top:2px solid #639922;">
+        <div style="font-size:10px; color:#4a6a42; text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;">Top department</div>
+        <div style="font-size:16px; font-weight:500; color:#d4c090; padding-top:3px;">Operations</div>
+        <div style="font-size:10px; color:#639922; margin-top:4px;">avg 74 / 100</div>
+      </div>
+      <div style="background:#0c1a0e; border:1px solid #1a3020; border-radius:12px; padding:1rem; border-top:2px solid #BA7517;">
+        <div style="font-size:10px; color:#4a6a42; text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;">Improving</div>
+        <div style="font-size:22px; font-weight:500; color:#d4c090;">12</div>
+        <div style="font-size:10px; color:#BA7517; margin-top:4px;">of 18 workers</div>
+      </div>
+      <div style="background:#0c1a0e; border:1px solid #1a3020; border-radius:12px; padding:1rem; border-top:2px solid #8B3A1A;">
+        <div style="font-size:10px; color:#4a6a42; text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;">Needs attention</div>
+        <div style="font-size:22px; font-weight:500; color:#c87a5a;">4</div>
+        <div style="font-size:10px; color:#8B3A1A; margin-top:4px;">score below 40</div>
+      </div>
+    </div>
+
+    <!-- Bottom grid -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+
+      <!-- Department breakdown -->
+      <div style="background:#0c1a0e; border:1px solid #1a3020; border-radius:12px; padding:1.25rem;">
+        <div style="font-size:12px; font-weight:500; color:#c9a84c; margin-bottom:1rem; display:flex; align-items:center; gap:6px;">Department breakdown <span style="flex:1;height:1px;background:#1a3020;display:block;"></span></div>
+
+        <!-- Operations -->
+        <div style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid #1a3020;">
+            <span style="font-size:11px; font-weight:500; color:#c9a84c; text-transform:uppercase; letter-spacing:.05em;">Operations</span>
+            <span style="font-size:11px; color:#639922;">avg 74</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">JM</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">J. Morrison</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:88%;height:100%;background:#639922;border-radius:2px;"></div></div><span style="font-size:10px;color:#639922;min-width:22px;text-align:right;">88</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">SL</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">S. Liu</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:76%;height:100%;background:#639922;border-radius:2px;"></div></div><span style="font-size:10px;color:#639922;min-width:22px;text-align:right;">76</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">RP</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">R. Patel</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:58%;height:100%;background:#c9a84c;border-radius:2px;"></div></div><span style="font-size:10px;color:#c9a84c;min-width:22px;text-align:right;">58</span></div>
+        </div>
+
+        <!-- Marketing -->
+        <div style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid #1a3020;">
+            <span style="font-size:11px; font-weight:500; color:#c9a84c; text-transform:uppercase; letter-spacing:.05em;">Marketing</span>
+            <span style="font-size:11px; color:#BA7517;">avg 55</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">AK</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">A. Khan</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:72%;height:100%;background:#639922;border-radius:2px;"></div></div><span style="font-size:10px;color:#639922;min-width:22px;text-align:right;">72</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">TD</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">T. Davis</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:51%;height:100%;background:#c9a84c;border-radius:2px;"></div></div><span style="font-size:10px;color:#c9a84c;min-width:22px;text-align:right;">51</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">EW</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">E. Walsh</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:37%;height:100%;background:#8B3A1A;border-radius:2px;"></div></div><span style="font-size:10px;color:#8B3A1A;min-width:22px;text-align:right;">37</span></div>
+        </div>
+
+        <!-- Engineering -->
+        <div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid #1a3020;">
+            <span style="font-size:11px; font-weight:500; color:#c9a84c; text-transform:uppercase; letter-spacing:.05em;">Engineering</span>
+            <span style="font-size:11px; color:#BA7517;">avg 52</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">NB</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">N. Brooks</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:68%;height:100%;background:#639922;border-radius:2px;"></div></div><span style="font-size:10px;color:#639922;min-width:22px;text-align:right;">68</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">CM</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">C. Müller</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:49%;height:100%;background:#c9a84c;border-radius:2px;"></div></div><span style="font-size:10px;color:#c9a84c;min-width:22px;text-align:right;">49</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:22px;height:22px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">YT</div><span style="font-size:11px;color:#8aaa7a;min-width:80px;">Y. Tanaka</span><div style="flex:1;height:4px;background:#152a18;border-radius:2px;overflow:hidden;"><div style="width:38%;height:100%;background:#8B3A1A;border-radius:2px;"></div></div><span style="font-size:10px;color:#8B3A1A;min-width:22px;text-align:right;">38</span></div>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div style="background:#0c1a0e; border:1px solid #1a3020; border-radius:12px; padding:1.25rem;">
+        <div style="font-size:12px; font-weight:500; color:#c9a84c; margin-bottom:1rem; display:flex; align-items:center; gap:6px;">Leaderboard <span style="flex:1;height:1px;background:#1a3020;display:block;"></span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#c9a84c;">1</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">JM</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">J. Morrison</div><div style="font-size:10px;color:#4a6a42;">Operations</div></div><span style="font-size:13px;font-weight:500;color:#c9a84c;">88</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#1a2e0a;color:#8fcf7a;border:1px solid #2a4e1a;">Eco hero</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#9aaa8a;">2</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">SL</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">S. Liu</div><div style="font-size:10px;color:#4a6a42;">Operations</div></div><span style="font-size:13px;font-weight:500;color:#639922;">76</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#1a2e0a;color:#8fcf7a;border:1px solid #2a4e1a;">Eco hero</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#BA7517;">3</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">AK</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">A. Khan</div><div style="font-size:10px;color:#4a6a42;">Marketing</div></div><span style="font-size:13px;font-weight:500;color:#639922;">72</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#1a2e0a;color:#8fcf7a;border:1px solid #2a4e1a;">Eco hero</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#3a5a32;">4</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">NB</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">N. Brooks</div><div style="font-size:10px;color:#4a6a42;">Engineering</div></div><span style="font-size:13px;font-weight:500;color:#639922;">68</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#1a2e0a;color:#8fcf7a;border:1px solid #2a4e1a;">Eco hero</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#3a5a32;">5</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">RP</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">R. Patel</div><div style="font-size:10px;color:#4a6a42;">Operations</div></div><span style="font-size:13px;font-weight:500;color:#c9a84c;">58</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#2a1e08;color:#c9a84c;border:1px solid #3a2e10;">Activist</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#3a5a32;">6</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">TD</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">T. Davis</div><div style="font-size:10px;color:#4a6a42;">Marketing</div></div><span style="font-size:13px;font-weight:500;color:#c9a84c;">51</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#2a1e08;color:#c9a84c;border:1px solid #3a2e10;">Activist</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#3a5a32;">7</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">CM</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">C. Müller</div><div style="font-size:10px;color:#4a6a42;">Engineering</div></div><span style="font-size:13px;font-weight:500;color:#c9a84c;">49</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#2a1e08;color:#c9a84c;border:1px solid #3a2e10;">Activist</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #111e13;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#3a5a32;">8</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">YT</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">Y. Tanaka</div><div style="font-size:10px;color:#4a6a42;">Engineering</div></div><span style="font-size:13px;font-weight:500;color:#BA7517;">38</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#2a100a;color:#BA7517;border:1px solid #3a1a0a;">Seedling</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;"><span style="font-size:12px;font-weight:500;min-width:16px;color:#3a5a32;">9</span><div style="width:26px;height:26px;border-radius:50%;background:#152a18;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#8fcf7a;border:1px solid #2a4a2a;flex-shrink:0;">EW</div><div style="flex:1"><div style="font-size:12px;color:#c8d8b8;">E. Walsh</div><div style="font-size:10px;color:#4a6a42;">Marketing</div></div><span style="font-size:13px;font-weight:500;color:#BA7517;">37</span><span style="font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;background:#2a100a;color:#BA7517;border:1px solid #3a1a0a;">Seedling</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
 </nav>
 
 <!-- ═══════ HERO - WASTELAND ═══════ -->
@@ -618,6 +727,7 @@
 
       ctx.restore();
     }
+    
   }
 
   const leaves = Array.from({ length: LEAF_COUNT }, () => new Leaf());
@@ -630,6 +740,25 @@
     requestAnimationFrame(animate);
   }
   animate();
+  function toggleManagerDash(e) {
+  e.preventDefault();
+  const dash = document.getElementById('managerDash');
+  const btn  = document.getElementById('managerTabBtn');
+  const label = document.getElementById('managerTabLabel');
+  const isOpen = dash.style.display === 'block';
+
+  if (isOpen) {
+    dash.style.display = 'none';
+    btn.style.background = 'rgba(196,160,64,0.06)';
+    btn.style.borderColor = 'rgba(196,160,64,0.25)';
+    label.textContent = 'Manager';
+  } else {
+    dash.style.display = 'block';
+    btn.style.background = 'rgba(196,160,64,0.18)';
+    btn.style.borderColor = 'rgba(196,160,64,0.6)';
+    label.textContent = 'Close';
+  }
+}
 </script>
 </body>
 </html>
