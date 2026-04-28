@@ -3,634 +3,2465 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generation 100 - Hackfest 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<title>Green Groove — Grow the world you'll live in.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --font-heading: 'Playfair Display', Georgia, serif;
-    --font-body: 'DM Sans', system-ui, sans-serif;
-    --radius: 12px;
-    --radius-sm: 8px;
+    /* Type */
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Geist', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+ 
+    /* Warm earth palette — gold/amber pushed forward */
+    --bg-deep:    #0d0a05;       /* near-black warm */
+    --bg-soil:    #14100a;       /* warm soil */
+    --bg-loam:    #1d1810;       /* tilled earth */
+    --bg-bark:    #2a2114;
+    --bg-canopy:  #0a1a0d;       /* deep forest shadow */
+    --bg-moss:    #142d18;
+    --bg-glow:    #1f3a1f;
+ 
+    /* Amber / gold — hero accents */
+    --amber-50:   #fef3d4;
+    --amber-100:  #fbe199;
+    --amber-200:  #f5c34d;
+    --amber-300:  #e6a23c;
+    --amber-400:  #c8841f;
+    --amber-500:  #9a6315;
+    --amber-700:  #5c3a0a;
+ 
+    /* Moss — vegetation */
+    --moss-50:    #e8f0d8;
+    --moss-100:   #c8dca0;
+    --moss-200:   #a6c574;
+    --moss-300:   #82a854;
+    --moss-400:   #5d8838;
+    --moss-500:   #3e6724;
+    --moss-600:   #284a17;
+    --moss-700:   #16320c;
+ 
+    /* Ink / text */
+    --text-bright: #faf2dc;
+    --text-warm:   #d8c8a4;
+    --text-muted:  #8c8068;
+    --text-dim:    #5c5440;
+ 
+    /* Geometry */
+    --r-sm: 4px;
+    --r-md: 14px;
+    --r-lg: 24px;
+    --r-xl: 36px;
+ 
+    --shadow-soft: 0 18px 60px rgba(0,0,0,0.45);
+    --shadow-warm: 0 30px 90px rgba(154, 99, 21, 0.18);
   }
-
+ 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-
   body {
     font-family: var(--font-body);
-    color: #e0e0e0;
-    line-height: 1.6;
-    background: #0a0a08;
+    color: var(--text-warm);
+    background: var(--bg-deep);
+    line-height: 1.55;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'ss01', 'cv01';
   }
-
   a { color: inherit; text-decoration: none; }
-
-  /* ══════════════════════════════════════════════
-     NAVIGATION
-     ══════════════════════════════════════════════ */
+  button { font-family: inherit; }
+  img, svg { display: block; max-width: 100%; }
+ 
+  /* ────────── Subtle grain ────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+  }
+ 
+  /* ────────── NAV ────────── */
   nav {
-    position: fixed; top: 0; width: 100%; z-index: 200;
-    background: rgba(10, 10, 8, 0.75);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    padding: 0.85rem 2rem;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    padding: 1.1rem 2rem;
     display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
+    background: linear-gradient(180deg, rgba(13,10,5,0.7), rgba(13,10,5,0));
+  }
+  nav.scrolled {
+    background: rgba(13,10,5,0.85);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-bottom: 1px solid rgba(230, 162, 60, 0.12);
+    padding: 0.85rem 2rem;
   }
   .nav-logo {
-    font-family: var(--font-heading); font-size: 1.2rem; color: #c4a040;
-    letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--amber-100);
+    letter-spacing: -0.015em;
   }
-  .nav-logo span { opacity: 0.4; font-size: 0.8rem; margin-left: 0.5rem; color: #888; }
-  .nav-links { display: flex; gap: 0.6rem; list-style: none; }
+  .nav-logo svg { width: 26px; height: 26px; }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; align-items: center; }
   .nav-links a {
-    color: #999; font-size: 0.85rem; font-weight: 500;
-    padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); transition: all 0.25s;
+    color: var(--text-warm);
+    font-size: 0.86rem;
+    font-weight: 500;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    transition: all 0.25s;
+    opacity: 0.75;
   }
-  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
-
-  /* ══════════════════════════════════════════════
-     SHARED
-     ══════════════════════════════════════════════ */
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-  section { padding: 6rem 0; position: relative; }
-
-  .section-label {
-    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.15em; margin-bottom: 0.5rem;
+  .nav-links a:hover { opacity: 1; color: var(--amber-100); }
+  .nav-cta {
+    margin-left: 0.7rem;
+    background: var(--amber-200);
+    color: var(--bg-deep) !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    padding: 0.6rem 1.15rem !important;
+    box-shadow: 0 6px 22px rgba(245, 195, 77, 0.25);
   }
-  .section-title {
-    font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 1rem;
-    line-height: 1.2;
+  .nav-cta:hover { background: var(--amber-100); transform: translateY(-1px); }
+ 
+  /* ────────── SHARED ────────── */
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+  .container-tight { max-width: 980px; margin: 0 auto; padding: 0 2rem; }
+  section { position: relative; }
+ 
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--amber-200);
+    margin-bottom: 1.5rem;
   }
-
-  /* ══════════════════════════════════════════════
-     HERO - WASTELAND VIBE
-     ══════════════════════════════════════════════ */
+  .eyebrow::before {
+    content: '';
+    width: 22px; height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+ 
+  .display-xl {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(3rem, 8.5vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: var(--text-bright);
+    font-variation-settings: 'opsz' 96;
+  }
+  .display-lg {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    color: var(--text-bright);
+    font-variation-settings: 'opsz' 72;
+  }
+  .display-md {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text-bright);
+  }
+  .italic-warm {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber-200);
+    font-variation-settings: 'opsz' 96;
+  }
+  .lead {
+    font-size: 1.1rem;
+    color: var(--text-warm);
+    opacity: 0.78;
+    max-width: 560px;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+ 
+  /* ────────── BUTTON ────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-weight: 600; font-size: 0.92rem;
+    padding: 0.95rem 1.6rem;
+    border-radius: 999px;
+    border: none; cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, var(--amber-100), var(--amber-300));
+    color: #1a0e02;
+    box-shadow:
+      0 6px 22px rgba(230, 162, 60, 0.35),
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      inset 0 -2px 0 rgba(154, 99, 21, 0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 34px rgba(230, 162, 60, 0.45),
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      inset 0 -2px 0 rgba(154, 99, 21, 0.4);
+  }
+  .btn-primary svg { transition: transform 0.3s; }
+  .btn-primary:hover svg { transform: translate(2px, -2px); }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(230, 162, 60, 0.25);
+    color: var(--text-warm);
+  }
+  .btn-ghost:hover {
+    border-color: rgba(230, 162, 60, 0.5);
+    background: rgba(230, 162, 60, 0.06);
+    color: var(--amber-100);
+  }
+ 
+  /* ════════════════════════════════════════════ */
+  /* HERO                                        */
+  /* ════════════════════════════════════════════ */
   .hero {
-    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-    position: relative; overflow: hidden;
-    background: linear-gradient(180deg, #000000 0%, #020d04 40%, #050f06 70%, #0a0a08 100%);
+    min-height: 100vh;
+    position: relative;
+    padding: 8rem 0 4rem;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 50% at 75% 20%, rgba(245, 195, 77, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 60% at 30% 90%, rgba(40, 74, 23, 0.45) 0%, transparent 65%),
+      radial-gradient(ellipse 100% 80% at 50% 100%, rgba(20, 45, 24, 0.5) 0%, transparent 70%),
+      linear-gradient(180deg, #0d0a05 0%, #14100a 50%, #0a1a0d 100%);
   }
-
-  /* ══════ FALLING LEAVES ══════ */
+ 
+  /* SUN — top right glow */
+  .hero-sun {
+    position: absolute;
+    top: 12%; right: 10%;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%,
+      rgba(254, 243, 212, 0.55) 0%,
+      rgba(245, 195, 77, 0.35) 25%,
+      rgba(230, 162, 60, 0.12) 50%,
+      transparent 75%);
+    filter: blur(20px);
+    z-index: 1;
+    animation: sunPulse 8s ease-in-out infinite;
+  }
+  @keyframes sunPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.92; }
+  }
+  .hero-sun-core {
+    position: absolute;
+    top: 14%; right: 13%;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--amber-50) 0%, var(--amber-200) 70%, transparent 100%);
+    box-shadow: 0 0 80px rgba(245, 195, 77, 0.6);
+    z-index: 1;
+  }
+ 
+  /* Light rays */
+  .hero-rays {
+    position: absolute;
+    top: 0; right: 0;
+    width: 80%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+ 
+  /* Botanical SVG layers */
+  .hero-botanical {
+    position: absolute;
+    pointer-events: none;
+  }
+  .hero-botanical svg {
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+ 
+  /* Top-left vine */
+  .botanical-tl {
+    top: -40px; left: -60px;
+    width: 460px; height: 520px;
+    z-index: 4;
+    transform-origin: top left;
+    animation: sway 9s ease-in-out infinite;
+  }
+  /* Bottom-left fern */
+  .botanical-bl {
+    bottom: -80px; left: -40px;
+    width: 480px; height: 380px;
+    z-index: 5;
+    transform-origin: bottom left;
+    animation: sway 11s ease-in-out infinite reverse;
+  }
+  /* Right hanging branch */
+  .botanical-br {
+    bottom: -60px; right: -80px;
+    width: 520px; height: 480px;
+    z-index: 5;
+    transform-origin: bottom right;
+    animation: sway 13s ease-in-out infinite;
+  }
+  /* Top-right small leaves */
+  .botanical-tr {
+    top: 4rem; right: 4rem;
+    width: 240px; height: 280px;
+    z-index: 3;
+    opacity: 0.7;
+    transform-origin: top right;
+    animation: sway 7s ease-in-out infinite reverse;
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(1.5deg) translateY(-6px); }
+  }
+ 
   #leaf-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 6;
+  }
+ 
+  .hero .container {
+    position: relative; z-index: 10;
+    min-height: calc(100vh - 12rem);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+ 
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.45rem 1rem 0.45rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(254, 243, 212, 0.06);
+    border: 1px solid rgba(245, 195, 77, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-size: 0.78rem;
+    color: var(--amber-100);
+    margin-bottom: 2rem;
+    width: fit-content;
+  }
+  .hero-badge .leaf-dot {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--amber-200);
+    color: var(--bg-deep);
+  }
+  .hero-badge .leaf-dot svg { width: 14px; height: 14px; }
+  .hero-badge .winner {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber-200);
+    padding-left: 0.6rem;
+    border-left: 1px solid rgba(245, 195, 77, 0.3);
+    margin-left: 0.3rem;
+  }
+ 
+  .hero h1 {
+    max-width: 900px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: wordRise 1s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes wordRise { to { opacity: 1; transform: translateY(0); } }
+ 
+  .hero-sub {
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+    font-size: 1.18rem;
+    line-height: 1.55;
+  }
+ 
+  .hero-btns {
+    display: flex; gap: 0.85rem; flex-wrap: wrap; align-items: center;
+  }
+ 
+  /* Scroll hint */
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 2rem;
+    z-index: 10;
+    display: flex; align-items: center; gap: 0.8rem;
+    font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scroll-hint-line {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, var(--amber-300), transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-hint-line::after {
+    content: '';
+    position: absolute; top: 0; left: -20px;
+    width: 20px; height: 1px;
+    background: var(--amber-100);
+    animation: trace 2.5s ease-in-out infinite;
+  }
+  @keyframes trace {
+    0% { left: -20px; }
+    100% { left: 60px; }
+  }
+ 
+  /* ════════════════════════════════════════════ */
+  /* STATS BAND                                   */
+  /* ════════════════════════════════════════════ */
+  .stats-band {
+    padding: 5rem 0;
+    background:
+      linear-gradient(180deg, var(--bg-canopy) 0%, var(--bg-soil) 100%);
+    border-top: 1px solid rgba(230, 162, 60, 0.08);
+    border-bottom: 1px solid rgba(40, 74, 23, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .stats-band::before {
+    /* Decorative branch SVG repeating border */
+    content: '';
+    position: absolute; left: 0; right: 0; top: 50%;
+    transform: translateY(-50%);
+    height: 1px;
+    background:
+      radial-gradient(circle, var(--amber-300) 1px, transparent 2px) 0 0/40px 1px repeat-x;
+    opacity: 0.15;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .stat {
+    padding: 1.5rem 2rem;
+    position: relative;
+    text-align: left;
+  }
+  .stat:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 25%; bottom: 25%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(230, 162, 60, 0.18), transparent);
+  }
+  .stat-icon {
+    width: 32px; height: 32px;
+    color: var(--amber-300);
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    margin-bottom: 0.5rem;
+    color: var(--amber-100);
+    font-variation-settings: 'opsz' 72;
+  }
+  .stat-num .unit {
+    font-size: 0.55em;
+    color: var(--amber-300);
+    margin-left: 0.1em;
+    font-weight: 500;
+  }
+  .stat-label {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    max-width: 220px;
+    text-wrap: balance;
+  }
+ 
+  /* ════════════════════════════════════════════ */
+  /* MANIFESTO BAND — narrative bridge            */
+  /* ════════════════════════════════════════════ */
+  .manifesto {
+    padding: 8rem 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 70% 20%, rgba(230, 162, 60, 0.08), transparent 60%),
+      linear-gradient(180deg, var(--bg-soil) 0%, var(--bg-loam) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .manifesto-deco {
+    position: absolute;
+    top: 0; right: -40px;
+    width: 380px; height: 100%;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .manifesto-text {
+    max-width: 880px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--text-warm);
+    text-wrap: balance;
+  }
+  .manifesto-text .highlight {
+    color: var(--amber-100);
+    font-style: italic;
+    font-variation-settings: 'opsz' 72;
+    position: relative;
+    white-space: nowrap;
+  }
+  .manifesto-text .highlight::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 8px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 5 Q 50 1, 100 4 T 198 3' stroke='%23e6a23c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat;
+    background-size: 100% 100%;
+    opacity: 0.7;
+  }
+ 
+  /* ════════════════════════════════════════════ */
+  /* FEATURES                                     */
+  /* ════════════════════════════════════════════ */
+  #features {
+    padding: 8rem 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(40, 74, 23, 0.4), transparent 60%),
+      linear-gradient(180deg, var(--bg-loam) 0%, var(--bg-canopy) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  #features .features-header {
+    margin-bottom: 4rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: end;
+  }
+ 
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(220px, auto);
+    gap: 1.25rem;
+  }
+  .feat {
+    grid-column: span 2;
+    background: linear-gradient(160deg, rgba(254, 243, 212, 0.04), rgba(254, 243, 212, 0.01));
+    border: 1px solid rgba(230, 162, 60, 0.12);
+    border-radius: var(--r-lg);
+    padding: 2rem 1.85rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .feat:hover {
+    transform: translateY(-4px);
+    border-color: rgba(230, 162, 60, 0.3);
+    background: linear-gradient(160deg, rgba(230, 162, 60, 0.07), rgba(254, 243, 212, 0.02));
+    box-shadow: var(--shadow-soft);
+  }
+  /* Feature visual area */
+  .feat-visual {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.85;
+    transition: transform 0.6s cubic-bezier(.2,.8,.2,1), opacity 0.4s;
+  }
+  .feat:hover .feat-visual { transform: scale(1.06) rotate(-2deg); opacity: 1; }
+ 
+  .feat h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.45rem;
+    letter-spacing: -0.018em;
+    color: var(--text-bright);
+    margin-bottom: 0.7rem;
+    line-height: 1.1;
+    position: relative;
+    z-index: 2;
+  }
+  .feat p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+    text-wrap: pretty;
+  }
+  .feat .feat-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber-300);
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 2;
+  }
+ 
+  /* Bento layouts */
+  .feat--lg {
+    grid-column: span 4;
+    grid-row: span 2;
+  }
+  .feat--wide {
+    grid-column: span 4;
+  }
+  .feat--tall {
+    grid-row: span 2;
+  }
+ 
+  /* Featured card variants */
+  .feat-living {
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(82, 168, 84, 0.12), transparent 70%),
+      linear-gradient(160deg, rgba(40, 74, 23, 0.4), rgba(20, 45, 24, 0.2));
+    border-color: rgba(130, 168, 84, 0.2);
+    overflow: hidden;
+  }
+  .feat-stages {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 420px;
+    height: 280px;
+    border-radius: 16px;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(to left, rgba(0,0,0,0.9) 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.9) 40%, transparent 100%);
+  }
+  .feat-stage-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-    z-index: 0;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.2s ease;
   }
-
-  .hero::before {
-    content: ''; position: absolute; inset: 0;
+  .feat-stage-img.active {
+    opacity: 0.85;
+  }
+  .feat:hover .feat-stage-img.active {
+    opacity: 1;
+  }
+  @media (max-width: 780px) {
+    .feat-stages {
+      width: 100%;
+      height: 180px;
+      bottom: 0;
+      right: 0;
+      border-radius: 0 0 16px 16px;
+      mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 30%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 30%, transparent 100%);
+    }
+  }
+  .feat-amber {
     background:
-    radial-gradient(ellipse at 30% 70%, rgba(20, 80, 30, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(10, 60, 20, 0.05) 0%, transparent 40%);
-    pointer-events: none;
+      radial-gradient(ellipse 60% 80% at 90% 10%, rgba(245, 195, 77, 0.18), transparent 70%),
+      linear-gradient(160deg, rgba(92, 58, 10, 0.3), rgba(42, 33, 20, 0.4));
+    border-color: rgba(245, 195, 77, 0.22);
   }
-  .hero::after {
-    content: ''; position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none; opacity: 0.5;
+ 
+  /* ════════════════════════════════════════════ */
+  /* BUSINESS                                     */
+  /* ════════════════════════════════════════════ */
+  #business {
+    padding: 8rem 0;
+    background: linear-gradient(180deg, var(--bg-canopy) 0%, var(--bg-moss) 100%);
+    position: relative;
+    overflow: hidden;
   }
-  .hero .container { position: relative; z-index: 1; }
-
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    color: #c4a040; font-size: 0.8rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.12em;
-    margin-bottom: 1.5rem; opacity: 0.9;
+  #business .biz-header {
+    text-align: center;
+    margin-bottom: 4rem;
   }
-  .hero-eyebrow .line { width: 32px; height: 1px; background: #c4a040; }
-
-  .hero h1 {
-    font-family: var(--font-heading); font-weight: 900;
-    font-size: clamp(2.8rem, 6.5vw, 5rem); line-height: 1.05;
-    margin-bottom: 1.25rem;
-    background: linear-gradient(160deg, #e8d5a0 0%, #c4a040 40%, #8a6e20 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
+  #business .biz-header .eyebrow { justify-content: center; }
+  #business .biz-header .lead { margin: 0 auto; }
+ 
+  .biz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
   }
-  .hero .subtitle {
-    font-size: 1.1rem; color: #9a9080; max-width: 580px;
-    margin-bottom: 2rem; line-height: 1.75;
+  .biz-card {
+    background: rgba(254, 243, 212, 0.025);
+    border: 1px solid rgba(230, 162, 60, 0.12);
+    border-radius: var(--r-lg);
+    padding: 2.25rem 1.85rem;
+    position: relative;
+    transition: all 0.35s;
+    display: flex; flex-direction: column;
   }
-
-  .tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
-  .tag {
-    font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem;
-    border-radius: 999px; border: 1px solid rgba(196, 160, 64, 0.25);
-    color: #c4a040; background: rgba(196, 160, 64, 0.06);
+  .biz-card:hover {
+    border-color: rgba(230, 162, 60, 0.28);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-soft);
   }
-
-  .btn-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-weight: 700; font-size: 0.9rem; padding: 0.8rem 1.6rem;
-    border-radius: var(--radius-sm); border: none; cursor: pointer;
-    font-family: var(--font-body); transition: all 0.25s; color: #fff;
+  .biz-card.featured {
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(245, 195, 77, 0.12), transparent 65%),
+      linear-gradient(180deg, rgba(92, 58, 10, 0.18), rgba(42, 33, 20, 0.3));
+    border-color: rgba(245, 195, 77, 0.3);
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-warm);
   }
-  .btn-primary {
-    background: linear-gradient(135deg, #b8942a, #8a6e20);
-    box-shadow: 0 4px 20px rgba(180, 140, 40, 0.25);
+  .biz-card.featured:hover { transform: translateY(-16px); }
+ 
+  .biz-tag {
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: var(--amber-200);
+    color: var(--bg-deep);
+    font-weight: 600;
+    white-space: nowrap;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(180, 140, 40, 0.35); }
-  .btn-outline {
-    background: transparent; border: 1.5px solid rgba(255,255,255,0.15); color: #bbb;
+  .biz-name {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--moss-200);
+    margin-bottom: 1rem;
   }
-  .btn-outline:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
-
-  /* ══════════════════════════════════════════════
-     TRANSITION DIVIDER
-     ══════════════════════════════════════════════ */
-  .transition-divider {
-    height: 180px; position: relative;
-  background: linear-gradient(180deg, #0a0a08 0%, #0c1a0c 50%, #0f2a14 100%);    display: flex; align-items: center; justify-content: center;
+  .biz-card.featured .biz-name { color: var(--amber-200); }
+  .biz-price {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2.6rem;
+    letter-spacing: -0.03em;
+    color: var(--text-bright);
+    margin-bottom: 0.2rem;
+    line-height: 1;
+    font-variation-settings: 'opsz' 72;
   }
-  .transition-divider::before {
-    content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
-    width: 1px;
-    background: linear-gradient(180deg, rgba(196,160,64,0.4) 0%, rgba(46,125,50,0.5) 100%);
+  .biz-price .currency { font-size: 0.5em; vertical-align: top; opacity: 0.7; margin-right: 2px; }
+  .biz-price .period { font-size: 0.4em; color: var(--text-muted); font-weight: 400; margin-left: 4px; }
+  .biz-desc {
+    font-size: 0.94rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.55;
+    text-wrap: pretty;
   }
-  .transition-text {
-    position: relative; z-index: 1;
-    background: #0d1a0d; padding: 0.5rem 1.5rem; border-radius: 999px;
-    border: 1px solid rgba(76,175,80,0.15);
-    font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
-    color: #6a8a6a; letter-spacing: 0.12em; text-transform: uppercase;
+  .biz-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: auto;
+    display: grid;
+    gap: 0.6rem;
+    border-top: 1px dashed rgba(230, 162, 60, 0.15);
+    padding-top: 1.25rem;
   }
-
-  /* ══════════════════════════════════════════════
-     ABOUT
-     ══════════════════════════════════════════════ */
-  #about { background: linear-gradient(180deg, #0f2a14 0%, #0f2a14 50%, #0f2a14 100%); }
-  #about .section-label { color: #66BB6A; }
-  #about .section-title { color: #C8E6C9; }
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
-  .about-card {
-
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(76,175,80,0.12);
-    border-radius: var(--radius); padding: 2rem; transition: all 0.3s;
+  .biz-list li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.88rem;
+    color: var(--text-warm);
+    opacity: 0.85;
+    line-height: 1.45;
   }
-  .about-card:hover {
-    border-color: rgba(76,175,80,0.3); background: rgba(255,255,255,0.06);
-    transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  .biz-list li svg {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+    color: var(--moss-200);
+    margin-top: 4px;
   }
-  .about-card .card-icon { font-size: 2.2rem; margin-bottom: 1rem; }
-  .about-card h3 {
-    font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 0.75rem; color: #A5D6A7;
-  }
-  .about-card p { color: #8aaa8a; font-size: 0.95rem; line-height: 1.7; }
-
-  /* ══════════════════════════════════════════════
-     FEATURES
-     ══════════════════════════════════════════════ */
-  #features { background: linear-gradient(180deg, #0f2a14 0%, #102e16 100%); }
-  #features .section-label { color: #81C784; }
-  #features .section-title { color: #E8F5E9; }
-
-  #business { background: linear-gradient(180deg, #102e16 0%, #143a1c 100%); }
-  #business .section-label { color: #81C784; }
-  #business .section-title { color: #E8F5E9; }
-
-  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
-  .feature-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(76,175,80,0.1);
-    border-radius: var(--radius); padding: 1.75rem; transition: all 0.3s;
-  }
-  .feature-card:hover {
-    transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-    border-color: rgba(76,175,80,0.25);
-  }
-  .feature-icon {
-    width: 48px; height: 48px; border-radius: var(--radius-sm);
-    background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.15);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; margin-bottom: 1rem;
-  }
-  .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: #C8E6C9; }
-  .feature-card p { color: #7a9a7a; font-size: 0.88rem; line-height: 1.65; }
-
-  /* ══════════════════════════════════════════════
-     DEMO
-     ══════════════════════════════════════════════ */
-  #demo {
-  background: linear-gradient(180deg, #143a1c 0%, #1a4422 100%);
+  .biz-card.featured .biz-list li svg { color: var(--amber-200); }
+ 
+  /* ════════════════════════════════════════════ */
+  /* CTA FOOTER                                   */
+  /* ════════════════════════════════════════════ */
+  .cta-footer {
+    padding: 7rem 0 0;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(245, 195, 77, 0.15), transparent 70%),
+      linear-gradient(180deg, var(--bg-moss) 0%, #0a1408 100%);
     text-align: center;
   }
-  #demo .section-label { color: #A5D6A7; }
-  #demo .section-title { color: #E8F5E9; }
-  .demo-subtitle { color: #8aaa8a; font-size: 0.95rem; margin-bottom: 2rem; }
-
-  .demo-frame-wrap {
-    background: rgba(0,0,0,0.4); border: 1px solid rgba(76,175,80,0.15);
-    border-radius: 16px; overflow: hidden; max-width: 920px; margin: 0 auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(46,125,50,0.08);
+  .cta-content {
+    position: relative; z-index: 5;
+    max-width: 720px;
+    margin: 0 auto;
   }
-  .demo-frame-bar {
-    background: rgba(0,0,0,0.5); padding: 10px 16px;
-    display: flex; align-items: center; gap: 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+  .cta-content .eyebrow { justify-content: center; color: var(--amber-200); }
+  .cta-content h2 {
+    margin-bottom: 1.25rem;
   }
-  .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .demo-dot.r { background: #7a3030; } .demo-dot.y { background: #7a6a20; } .demo-dot.g { background: #2a6a2a; }
-  .demo-frame-bar span { flex: 1; text-align: center; color: #555; font-size: 0.72rem; font-weight: 500; }
-  .demo-frame-wrap iframe { width: 100%; height: 620px; border: none; }
-  .demo-placeholder {
-    width: 100%; height: 500px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; color: #5a7a5a;
-    background: rgba(0,0,0,0.3);
+  .cta-content p {
+    color: var(--text-warm);
+    opacity: 0.8;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 540px;
+    margin: 0 auto 2.25rem;
+    text-wrap: pretty;
   }
-  .demo-placeholder .big { font-size: 3rem; margin-bottom: 0.5rem; }
-  .demo-placeholder p { font-size: 0.95rem; }
-  .demo-placeholder .hint { font-size: 0.78rem; color: #3a5a3a; margin-top: 0.5rem; max-width: 380px; }
-
-  /* ══════════════════════════════════════════════
-     TECH
-     ══════════════════════════════════════════════ */
-  #tech { background: linear-gradient(180deg, #1a4422 0%, #1e4e28 50%, #1e6030 100%); }  #tech .section-label { color: #A5D6A7; }
-  #tech .section-title { color: #E8F5E9; }
-  .tech-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-  .tech-badge {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(76,175,80,0.15);
-    padding: 0.55rem 1.1rem; border-radius: var(--radius-sm);
-    font-size: 0.85rem; font-weight: 600; color: #A5D6A7; transition: all 0.2s;
+ 
+  .cta-tree-wrap {
+    margin: 4rem auto 0;
+    width: 100%;
+    max-width: 1100px;
+    height: 280px;
+    position: relative;
   }
-  .tech-badge:hover { border-color: #66BB6A; background: rgba(76,175,80,0.08); }
-  .tech-badge .badge-icon { margin-right: 0.35rem; }
-
-  /* ══════════════════════════════════════════════
-     TEAM
-     ══════════════════════════════════════════════ */
-  #team { background: linear-gradient(180deg, #1e4e28 0%, #1e6030 100%); }  #team .section-label { color: #C8E6C9; }
-  #team .section-title { color: #ffffff; }
-  .team-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem; margin-top: 2rem;
-  }
-  .team-member {
-    text-align: center; padding: 1.5rem 1rem;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
-    border-radius: var(--radius); transition: all 0.3s;
-  }
-  .team-member:hover {
-    transform: translateY(-4px); border-color: rgba(76,175,80,0.3);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  }
-  .team-avatar {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: rgba(76,175,80,0.12); border: 2px solid rgba(76,175,80,0.2);
-    margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem; color: #66BB6A; font-weight: 800; transition: all 0.3s;
-  }
-  .team-member:hover .team-avatar {
-    border-color: #66BB6A; box-shadow: 0 0 20px rgba(76,175,80,0.2);
-  }
-  .team-member h4 { font-size: 0.95rem; margin-bottom: 0.2rem; color: #E8F5E9; }
-  .team-member p { font-size: 0.78rem; color: #81C784; }
-
-  /* ══════════════════════════════════════════════
-     FOOTER
-     ══════════════════════════════════════════════ */
+  .cta-tree-wrap svg { width: 100%; height: 100%; }
+ 
   footer {
-    background: #1a5a26; border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 2rem 0; text-align: center; color: #5a8a5a; font-size: 0.85rem;
+    position: relative; z-index: 5;
+    padding: 2.25rem 0 2rem;
+    border-top: 1px solid rgba(230, 162, 60, 0.1);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 4rem;
   }
-  footer .heart { color: #66BB6A; }
-
-  /* ══════════════════════════════════════════════
-     ANIMATIONS
-     ══════════════════════════════════════════════ */
-  .fade-in {
-    opacity: 0; transform: translateY(24px);
-    animation: fadeUp 0.7s ease forwards;
+  footer .container {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 2rem; flex-wrap: wrap;
   }
-  .fade-in:nth-child(2) { animation-delay: 0.08s; }
-  .fade-in:nth-child(3) { animation-delay: 0.16s; }
-  .fade-in:nth-child(4) { animation-delay: 0.22s; }
-  .fade-in:nth-child(5) { animation-delay: 0.28s; }
-  .fade-in:nth-child(6) { animation-delay: 0.34s; }
-
-  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-
-  @media (max-width: 768px) {
-    .about-grid, .features-grid { grid-template-columns: 1fr; }
-    .nav-links { gap: 0.15rem; }
-    .nav-links a { font-size: 0.75rem; padding: 0.3rem 0.4rem; }
-    .hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); }
-    .demo-frame-wrap iframe { height: 420px; }
-    .demo-placeholder { height: 320px; }
+  footer .sep { opacity: 0.4; margin: 0 0.5rem; }
+ 
+  /* ────────── Reveal animations ────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s cubic-bezier(.2,.8,.2,1), transform 0.9s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(.2,.8,.2,1), transform 0.8s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal-stagger.in-view > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-stagger.in-view > *:nth-child(1) { transition-delay: 0s; }
+  .reveal-stagger.in-view > *:nth-child(2) { transition-delay: 0.08s; }
+  .reveal-stagger.in-view > *:nth-child(3) { transition-delay: 0.16s; }
+  .reveal-stagger.in-view > *:nth-child(4) { transition-delay: 0.24s; }
+  .reveal-stagger.in-view > *:nth-child(5) { transition-delay: 0.32s; }
+  .reveal-stagger.in-view > *:nth-child(6) { transition-delay: 0.40s; }
+ 
+  /* ────────── Responsive ────────── */
+  @media (max-width: 1000px) {
+    .features-grid { grid-template-columns: repeat(4, 1fr); }
+    .feat { grid-column: span 2; }
+    .feat--lg, .feat--wide { grid-column: span 4; grid-row: auto; }
+    .feat--tall { grid-row: auto; }
+    .biz-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .biz-card.featured { transform: none; }
+    .biz-card.featured:hover { transform: translateY(-4px); }
+    #features .features-header { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+  @media (max-width: 720px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2)::after { display: none; }
+    .stat { padding: 1.25rem 1rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .feat, .feat--lg, .feat--wide { grid-column: span 1; }
+    .botanical-tl, .botanical-tr { display: none; }
+    .botanical-bl { width: 280px; height: 220px; opacity: 0.6; }
+    .botanical-br { width: 320px; height: 280px; opacity: 0.6; }
+    .hero-sun { width: 220px; height: 220px; right: -40px; top: 8%; }
+    .hero-sun-core { width: 60px; height: 60px; right: -10px; top: 9%; }
+    .scroll-hint { display: none; }
+    .container, .container-tight { padding: 0 1.25rem; }
+    nav { padding: 0.85rem 1.25rem; }
+    .hero { padding-top: 6rem; }
+  }
+ 
+  /* ─────────────────────────────────────────────── */
+  /* EVOLUTION (solarpunk timeline)                 */
+  /* ─────────────────────────────────────────────── */
+  #evolution {
+    padding: 8rem 0 7rem;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(217, 152, 77, 0.08), transparent 55%),
+      linear-gradient(180deg, var(--cream) 0%, #f1e7cd 100%);
+    position: relative;
+  }
+  .evo-header {
+    max-width: 780px;
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+  .evo-header .display-lg { margin-top: 0.6rem; }
+  .italic-warm {
+    font-family: 'Fraunces', 'Bricolage Grotesque', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber-deep);
+  }
+  .evo-stage {
+    max-width: 1240px;
+    margin: 0 auto;
+    background: var(--moss-deep);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -30px rgba(20, 45, 24, 0.45), 0 8px 24px -12px rgba(20, 45, 24, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .evo-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1200 / 520;
+    overflow: hidden;
+    background: linear-gradient(180deg, #2a3b4a 0%, #6a7a4a 55%, #8a7a3a 100%);
+    transition: background 1.2s ease;
+  }
+  .evo-viewport[data-stage="0"] {
+    background: linear-gradient(180deg, #3a2a20 0%, #6a4a30 60%, #8a6a40 100%);
+  }
+  .evo-viewport[data-stage="1"] {
+    background: linear-gradient(180deg, #4a3a28 0%, #7a5a38 60%, #9a7a48 100%);
+  }
+  .evo-viewport[data-stage="2"] {
+    background: linear-gradient(180deg, #5a6a3a 0%, #8a9a58 60%, #b4b478 100%);
+  }
+  .evo-viewport[data-stage="3"] {
+    background: linear-gradient(180deg, #6a8a5a 0%, #a8b878 60%, #d4c890 100%);
+  }
+  .evo-viewport[data-stage="4"] {
+    background: linear-gradient(180deg, #5a9a5a 0%, #88b868 60%, #c4d890 100%);
+  }
+  .evo-viewport[data-stage="5"] {
+    background: linear-gradient(180deg, #7aa0c8 0%, #c4d8b8 55%, #f2e5bc 100%);
+  }
+  .evo-viewport[data-stage="6"] {
+    background: linear-gradient(180deg, #d97aa8 0%, #f5c34d 50%, #fbe199 100%);
+  }
+  .evo-sky { display: none; }
+  .evo-scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s ease;
+    pointer-events: none;
+  }
+  .evo-scene.active { opacity: 1; }
+  .evo-scene img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+ 
+  .evo-controls {
+    padding: 2.25rem 2.5rem 2.5rem;
+    background: #0f2014;
+    color: var(--cream);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2.5rem;
+    align-items: end;
+  }
+  .evo-num {
+    font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.6rem;
+  }
+  .evo-title {
+    font-family: 'Bricolage Grotesque', serif;
+    font-size: clamp(1.65rem, 2.4vw, 2.1rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    margin-bottom: 0.65rem;
+    color: #faf2dc;
+    transition: opacity 0.4s ease;
+  }
+  .evo-desc {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: rgba(250, 242, 220, 0.72);
+    max-width: 46ch;
+    transition: opacity 0.4s ease;
+  }
+  .evo-track {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(250, 242, 220, 0.12);
+    padding-top: 1.25rem;
+    position: relative;
+  }
+  .evo-track::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 1px;
+    width: calc((var(--evo-stage, 0) + 0.5) * 14.2857%);
+    background: linear-gradient(90deg, var(--amber-deep), var(--amber), #f5c34d);
+    transition: width 0.6s ease;
+  }
+  .evo-step {
+    background: none;
+    border: none;
+    color: rgba(250, 242, 220, 0.45);
+    padding: 0.75rem 0.4rem 0.2rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    transition: color 0.2s ease;
+    position: relative;
+    border-left: 1px solid rgba(250, 242, 220, 0.1);
+  }
+  .evo-step:first-child { border-left: none; }
+  .evo-step span {
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  .evo-step em {
+    font-family: 'Geist Mono', monospace;
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    opacity: 0.7;
+  }
+  .evo-step:hover { color: rgba(250, 242, 220, 0.85); }
+  .evo-step.active { color: var(--amber); }
+  .evo-step.active span { color: #faf2dc; }
+  .evo-step::after {
+    content: '';
+    position: absolute;
+    top: -1.31rem;
+    left: 0.4rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #0f2014;
+    border: 2px solid rgba(250, 242, 220, 0.3);
+    transition: all 0.3s ease;
+  }
+  .evo-step.active::after {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 0 4px rgba(217, 152, 77, 0.2);
+  }
+ 
+  .evo-caption {
+    max-width: 620px;
+    margin: 2.5rem auto 0;
+    text-align: center;
+    font-family: 'Fraunces', 'Bricolage Grotesque', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+ 
+  @media (max-width: 780px) {
+    #evolution { padding: 5rem 0 4.5rem; }
+    .evo-controls {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+      padding: 1.75rem 1.25rem 2rem;
+    }
+    .evo-step { padding: 0.5rem 0.2rem 0.2rem; }
+    .evo-step span { font-size: 0.7rem; }
+    .evo-step em { font-size: 0.65rem; }
+    .evo-title { font-size: 1.4rem; }
+    .evo-desc { font-size: 0.92rem; }
   }
 </style>
 </head>
 <body>
-
-<!-- ═══════ NAV ═══════ -->
-<nav>
-  <div class="nav-logo">Green Groove <span>Hackfest 2026</span></div>
+ 
+<!-- ════════════ NAV ════════════ -->
+<nav id="nav">
+  <a class="nav-logo" href="#top">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fbe199"/>
+          <stop offset="100%" stop-color="#82a854"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 4 C 11 8, 8 13, 8 18 a 8 8 0 0 0 16 0 C 24 13, 21 8, 16 4 Z" fill="url(#logoGrad)"/>
+      <path d="M16 12 V 28" stroke="#5c3a0a" stroke-width="1.4" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    Green Groove
+  </a>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
+    <li><a href="#stats">Impact</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="#business">Business Model</a></li>
-    <li><a href="#tech">Tech</a></li>
-    <li><a href="#team">Team</a></li>
+    <li><a href="#business">Pricing</a></li>
+    <li><a href="#start" class="nav-cta">Start growing</a></li>
   </ul>
 </nav>
-
-<!-- ═══════ HERO - WASTELAND ═══════ -->
-<section class="hero">
+ 
+<!-- ════════════ HERO ════════════ -->
+<section class="hero" id="top">
+  <!-- Sun -->
+  <div class="hero-sun"></div>
+  <div class="hero-sun-core"></div>
+ 
+  <!-- Light rays -->
+  <svg class="hero-rays" viewBox="0 0 800 800" preserveAspectRatio="xMaxYMin slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="rayGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fef3d4" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#fef3d4" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(680 130)">
+      <path d="M0 0 L -300 700 L -260 700 Z" fill="url(#rayGrad)" opacity="0.6"/>
+      <path d="M0 0 L -180 700 L -140 700 Z" fill="url(#rayGrad)" opacity="0.4"/>
+      <path d="M0 0 L -480 700 L -440 700 Z" fill="url(#rayGrad)" opacity="0.5"/>
+      <path d="M0 0 L -100 700 L -60 700 Z" fill="url(#rayGrad)" opacity="0.3"/>
+      <path d="M0 0 L -380 700 L -340 700 Z" fill="url(#rayGrad)" opacity="0.45"/>
+    </g>
+  </svg>
+ 
+  <!-- BOTANICAL FRAMING -->
+  <!-- Top-left vine -->
+  <div class="hero-botanical botanical-tl">
+    <svg viewBox="0 0 460 520" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="leafGrad1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#3e6724"/>
+          <stop offset="100%" stop-color="#16320c"/>
+        </linearGradient>
+        <linearGradient id="leafGradGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e6a23c"/>
+          <stop offset="100%" stop-color="#9a6315"/>
+        </linearGradient>
+      </defs>
+      <!-- Main vine -->
+      <path d="M 0 60 Q 80 80, 120 130 T 220 240 T 320 380 T 440 520"
+            stroke="#2a2114" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- Leaves along vine -->
+      <g>
+        <ellipse cx="60" cy="50" rx="38" ry="14" fill="url(#leafGrad1)" transform="rotate(-30 60 50)"/>
+        <ellipse cx="100" cy="100" rx="32" ry="11" fill="url(#leafGrad1)" transform="rotate(20 100 100)"/>
+        <ellipse cx="155" cy="175" rx="40" ry="14" fill="url(#leafGrad1)" transform="rotate(-15 155 175)"/>
+        <ellipse cx="180" cy="210" rx="28" ry="10" fill="url(#leafGradGold)" transform="rotate(45 180 210)" opacity="0.85"/>
+        <ellipse cx="240" cy="265" rx="36" ry="12" fill="url(#leafGrad1)" transform="rotate(-25 240 265)"/>
+        <ellipse cx="270" cy="320" rx="30" ry="10" fill="url(#leafGrad1)" transform="rotate(35 270 320)"/>
+        <ellipse cx="310" cy="370" rx="42" ry="15" fill="url(#leafGrad1)" transform="rotate(-20 310 370)"/>
+        <ellipse cx="355" cy="420" rx="26" ry="9" fill="url(#leafGradGold)" transform="rotate(50 355 420)" opacity="0.8"/>
+        <ellipse cx="385" cy="465" rx="34" ry="11" fill="url(#leafGrad1)" transform="rotate(-30 385 465)"/>
+      </g>
+      <!-- Highlights -->
+      <g opacity="0.4">
+        <ellipse cx="55" cy="45" rx="14" ry="4" fill="#82a854" transform="rotate(-30 55 45)"/>
+        <ellipse cx="150" cy="170" rx="18" ry="5" fill="#82a854" transform="rotate(-15 150 170)"/>
+        <ellipse cx="305" cy="365" rx="20" ry="5" fill="#82a854" transform="rotate(-20 305 365)"/>
+      </g>
+    </svg>
+  </div>
+ 
+  <!-- Bottom-left fern -->
+  <div class="hero-botanical botanical-bl">
+    <svg viewBox="0 0 480 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fernGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5d8838"/>
+          <stop offset="100%" stop-color="#16320c"/>
+        </linearGradient>
+        <linearGradient id="fernGrad2" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#284a17"/>
+          <stop offset="100%" stop-color="#3e6724"/>
+        </linearGradient>
+      </defs>
+      <!-- Three fern fronds rising from bottom-left -->
+      <g transform="translate(40 380)">
+        <!-- Frond 1 (back, tallest) -->
+        <g transform="rotate(-78)">
+          <path d="M 0 0 Q 5 -100, 0 -260" stroke="#2a2114" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <g fill="url(#fernGrad)">
+            <ellipse cx="-12" cy="-30" rx="20" ry="6" transform="rotate(-25 -12 -30)"/>
+            <ellipse cx="12" cy="-50" rx="22" ry="6" transform="rotate(20 12 -50)"/>
+            <ellipse cx="-14" cy="-70" rx="24" ry="7" transform="rotate(-25 -14 -70)"/>
+            <ellipse cx="14" cy="-90" rx="26" ry="7" transform="rotate(25 14 -90)"/>
+            <ellipse cx="-16" cy="-115" rx="28" ry="8" transform="rotate(-22 -16 -115)"/>
+            <ellipse cx="16" cy="-140" rx="26" ry="7" transform="rotate(22 16 -140)"/>
+            <ellipse cx="-15" cy="-165" rx="24" ry="7" transform="rotate(-20 -15 -165)"/>
+            <ellipse cx="14" cy="-190" rx="20" ry="6" transform="rotate(20 14 -190)"/>
+            <ellipse cx="-10" cy="-215" rx="16" ry="5" transform="rotate(-18 -10 -215)"/>
+            <ellipse cx="8" cy="-235" rx="12" ry="4" transform="rotate(15 8 -235)"/>
+          </g>
+        </g>
+        <!-- Frond 2 (middle) -->
+        <g transform="rotate(-55) translate(20 0)">
+          <path d="M 0 0 Q 8 -90, 0 -220" stroke="#2a2114" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <g fill="url(#fernGrad2)">
+            <ellipse cx="-10" cy="-25" rx="18" ry="5" transform="rotate(-25 -10 -25)"/>
+            <ellipse cx="11" cy="-45" rx="20" ry="6" transform="rotate(22 11 -45)"/>
+            <ellipse cx="-12" cy="-68" rx="22" ry="6" transform="rotate(-22 -12 -68)"/>
+            <ellipse cx="13" cy="-92" rx="24" ry="7" transform="rotate(25 13 -92)"/>
+            <ellipse cx="-14" cy="-118" rx="22" ry="7" transform="rotate(-22 -14 -118)"/>
+            <ellipse cx="13" cy="-142" rx="20" ry="6" transform="rotate(22 13 -142)"/>
+            <ellipse cx="-10" cy="-168" rx="16" ry="5" transform="rotate(-20 -10 -168)"/>
+            <ellipse cx="8" cy="-190" rx="12" ry="4" transform="rotate(20 8 -190)"/>
+          </g>
+        </g>
+        <!-- Frond 3 (front, shortest) -->
+        <g transform="rotate(-30) translate(40 0)">
+          <path d="M 0 0 Q 6 -70, 0 -170" stroke="#2a2114" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <g fill="url(#fernGrad)">
+            <ellipse cx="-9" cy="-22" rx="16" ry="5" transform="rotate(-25 -9 -22)"/>
+            <ellipse cx="10" cy="-42" rx="18" ry="5" transform="rotate(22 10 -42)"/>
+            <ellipse cx="-11" cy="-65" rx="20" ry="6" transform="rotate(-22 -11 -65)"/>
+            <ellipse cx="11" cy="-90" rx="20" ry="6" transform="rotate(25 11 -90)"/>
+            <ellipse cx="-10" cy="-115" rx="18" ry="5" transform="rotate(-22 -10 -115)"/>
+            <ellipse cx="8" cy="-138" rx="14" ry="4" transform="rotate(22 8 -138)"/>
+          </g>
+        </g>
+      </g>
+      <!-- Small mushroom -->
+      <g transform="translate(140 350)">
+        <ellipse cx="0" cy="0" rx="14" ry="6" fill="#9a6315"/>
+        <path d="M -14 0 Q -10 -14, 0 -16 Q 10 -14, 14 0 Z" fill="#c8841f"/>
+        <circle cx="-4" cy="-10" r="2" fill="#fef3d4" opacity="0.7"/>
+        <circle cx="5" cy="-7" r="1.5" fill="#fef3d4" opacity="0.5"/>
+      </g>
+    </svg>
+  </div>
+ 
+  <!-- Bottom-right hanging branch -->
+  <div class="hero-botanical botanical-br">
+    <svg viewBox="0 0 520 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="branchLeaf" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#5d8838"/>
+          <stop offset="100%" stop-color="#284a17"/>
+        </linearGradient>
+        <radialGradient id="berry" cx="0.3" cy="0.3" r="0.7">
+          <stop offset="0%" stop-color="#fbe199"/>
+          <stop offset="100%" stop-color="#9a6315"/>
+        </radialGradient>
+      </defs>
+      <!-- Main hanging branch from top-right -->
+      <path d="M 520 0 Q 460 80, 380 140 T 200 280 T 60 400"
+            stroke="#2a2114" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- Sub-branch -->
+      <path d="M 380 140 Q 350 200, 320 250" stroke="#2a2114" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M 200 280 Q 220 330, 240 370" stroke="#2a2114" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ 
+      <!-- Leaves clustering along branch -->
+      <g>
+        <ellipse cx="490" cy="30" rx="36" ry="14" fill="url(#branchLeaf)" transform="rotate(40 490 30)"/>
+        <ellipse cx="450" cy="80" rx="42" ry="15" fill="url(#branchLeaf)" transform="rotate(-20 450 80)"/>
+        <ellipse cx="420" cy="125" rx="38" ry="13" fill="url(#branchLeaf)" transform="rotate(50 420 125)"/>
+        <ellipse cx="380" cy="155" rx="34" ry="12" fill="url(#branchLeaf)" transform="rotate(-30 380 155)"/>
+        <ellipse cx="340" cy="185" rx="40" ry="14" fill="url(#branchLeaf)" transform="rotate(25 340 185)"/>
+        <ellipse cx="320" cy="245" rx="36" ry="12" fill="url(#branchLeaf)" transform="rotate(60 320 245)"/>
+        <ellipse cx="290" cy="225" rx="32" ry="11" fill="url(#branchLeaf)" transform="rotate(-30 290 225)"/>
+        <ellipse cx="260" cy="265" rx="42" ry="14" fill="url(#branchLeaf)" transform="rotate(15 260 265)"/>
+        <ellipse cx="220" cy="290" rx="38" ry="13" fill="url(#branchLeaf)" transform="rotate(-40 220 290)"/>
+        <ellipse cx="180" cy="320" rx="34" ry="12" fill="url(#branchLeaf)" transform="rotate(30 180 320)"/>
+        <ellipse cx="135" cy="355" rx="40" ry="14" fill="url(#branchLeaf)" transform="rotate(-25 135 355)"/>
+        <ellipse cx="240" cy="370" rx="32" ry="11" fill="url(#branchLeaf)" transform="rotate(60 240 370)"/>
+        <ellipse cx="80" cy="395" rx="36" ry="12" fill="url(#branchLeaf)" transform="rotate(-15 80 395)"/>
+      </g>
+      <!-- Berries (gold accents) -->
+      <g>
+        <circle cx="395" cy="180" r="6" fill="url(#berry)"/>
+        <circle cx="408" cy="190" r="5" fill="url(#berry)"/>
+        <circle cx="385" cy="195" r="4.5" fill="url(#berry)"/>
+        <circle cx="155" cy="340" r="5" fill="url(#berry)"/>
+        <circle cx="165" cy="350" r="4" fill="url(#berry)"/>
+      </g>
+      <!-- Leaf highlights -->
+      <g opacity="0.45" fill="#a6c574">
+        <ellipse cx="445" cy="75" rx="20" ry="5" transform="rotate(-20 445 75)"/>
+        <ellipse cx="335" cy="180" rx="18" ry="4" transform="rotate(25 335 180)"/>
+        <ellipse cx="255" cy="262" rx="20" ry="5" transform="rotate(15 255 262)"/>
+        <ellipse cx="130" cy="350" rx="18" ry="5" transform="rotate(-25 130 350)"/>
+      </g>
+    </svg>
+  </div>
+ 
+  <!-- Top-right small leaves -->
+  <div class="hero-botanical botanical-tr">
+    <svg viewBox="0 0 240 280" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 240 0 Q 200 60, 160 110 T 80 220" stroke="#2a2114" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
+      <g fill="url(#branchLeaf)">
+        <ellipse cx="220" cy="30" rx="22" ry="8" transform="rotate(-40 220 30)"/>
+        <ellipse cx="190" cy="70" rx="24" ry="8" transform="rotate(30 190 70)"/>
+        <ellipse cx="160" cy="115" rx="22" ry="8" transform="rotate(-30 160 115)"/>
+        <ellipse cx="125" cy="160" rx="26" ry="9" transform="rotate(20 125 160)"/>
+        <ellipse cx="95" cy="200" rx="20" ry="7" transform="rotate(-30 95 200)"/>
+      </g>
+    </svg>
+  </div>
+ 
+  <!-- Falling leaves canvas -->
   <canvas id="leaf-canvas"></canvas>
+ 
+  <!-- Hero content -->
   <div class="container">
-    <div class="hero-eyebrow fade-in">
-      <span class="line"></span> Webster Hackfest 2026
+    <div style="opacity: 0; animation: wordRise 0.9s 0.1s cubic-bezier(.2,.8,.2,1) forwards;">
+      <div class="hero-badge">
+        <span class="leaf-dot">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C 8 6, 6 10, 6 14 a 6 6 0 0 0 12 0 C 18 10, 16 6, 12 2 Z"/></svg>
+        </span>
+        <span>Webster Hackfest 2026</span>
+        <span class="winner">1st Place</span>
+      </div>
     </div>
-    <div class="tag-row fade-in">
-      <span class="tag">Sustainability &amp; the Future</span>
-      <span class="tag">Generation 100</span>
-    </div>
-    <h1 class="fade-in">Your Actions Today,<br>Their World in 2126</h1>
-    <p class="subtitle fade-in">
-      The choices we make right now echo for a century. Left unchecked, our daily habits
-      lead to a barren, broken world. But it doesn't have to be that way.
-      Green Groove shows you exactly what's at stake, and gives you the power to change it.
+ 
+    <h1 class="display-xl" id="heroH1">
+      <!-- Words injected via JS for staggered reveal -->
+      Grow the world<br>
+      <span class="italic-warm">you'll&nbsp;live in.</span>
+    </h1>
+ 
+    <p class="hero-sub lead" style="opacity: 0; animation: wordRise 0.9s 0.7s cubic-bezier(.2,.8,.2,1) forwards;">
+      A sustainability habit app where every choice you make today
+      visibly grows the landscape your grandchildren inherit tomorrow.
     </p>
-    <div class="btn-row fade-in">
-      <a href="generation100.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Try The Demo</a>
-      <a href="#about" class="btn btn-outline">Learn More</a>
+ 
+    <div class="hero-btns" style="opacity: 0; animation: wordRise 0.9s 0.85s cubic-bezier(.2,.8,.2,1) forwards;" id="start">
+      <a href="#features" class="btn btn-primary">
+        Start growing
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 17L17 7M7 7h10v10"/>
+        </svg>
+      </a>
+      <a href="#features" class="btn btn-ghost">See how it works</a>
     </div>
   </div>
+ 
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-hint-line"></div>
+  </div>
 </section>
-
-<!-- ═══════ TRANSITION ═══════ -->
-<div class="transition-divider">
-  <span class="transition-text">but there's hope</span>
-</div>
-
-<!-- ═══════ ABOUT ═══════ -->
-<section id="about">
+ 
+<!-- ════════════ STATS BAND ════════════ -->
+<section class="stats-band" id="stats">
   <div class="container">
-    <span class="section-label">Why This Matters</span>
-    <h2 class="section-title">The Problem &amp; Our Solution</h2>
-    <div class="about-grid">
-      <div class="about-card fade-in">
-        <div class="card-icon">🏚️</div>
-        <h3>The Problem</h3>
-        <p>
-          Every day, billions of small choices add up: leaving lights on, buying single-use plastics,
-          wasting water, driving short distances. Individually they seem harmless, but compounded over
-          decades these habits erode the planet future generations will inherit. Most people never see
-          the long-term consequence of their daily routine, so they never change it.
-        </p>
+    <div class="stats-grid reveal-stagger">
+      <div class="stat">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 19c2 0 3-1 5-1s3 1 5 1 3-1 5-1 3 1 3 1"/>
+          <path d="M3 14c2 0 3-1 5-1s3 1 5 1 3-1 5-1 3 1 3 1"/>
+          <path d="M3 9c2 0 3-1 5-1s3 1 5 1 3-1 5-1 3 1 3 1"/>
+        </svg>
+        <div class="stat-num" data-count="2.6"><span class="unit">B</span></div>
+        <div class="stat-label">Tons of CO₂ from household choices each year</div>
       </div>
-      <div class="about-card fade-in">
-        <div class="card-icon">🌿</div>
-        <h3>Our Solution</h3>
-        <p>
-          Green Groove turns hidden habits into something you can actually see. Users complete
-          a baseline survey that measures their environmental footprint across energy, consumption,
-          and water use. From there, the app builds personalized daily goals aimed at the areas
-          where users need the most improvement. Each completed challenge brings a visual world
-          to life, slowly shifting from a barren landscape into a thriving one, making every
-          small action feel meaningful and worthwhile.
-        </p>
+      <div class="stat">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 3"/>
+        </svg>
+        <div class="stat-num" data-count="72"><span class="unit">%</span></div>
+        <div class="stat-label">Of people want to act greener but say they don't know how</div>
+      </div>
+      <div class="stat">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3 L 12 21"/>
+          <path d="M12 8 C 8 8, 6 5, 5 3 C 5 7, 8 10, 12 10"/>
+          <path d="M12 8 C 16 8, 18 5, 19 3 C 19 7, 16 10, 12 10"/>
+          <path d="M12 14 C 8 14, 6 11, 5 9 C 5 13, 8 16, 12 16"/>
+          <path d="M12 14 C 16 14, 18 11, 19 9 C 19 13, 16 16, 12 16"/>
+        </svg>
+        <div class="stat-num" data-count="7"></div>
+        <div class="stat-label">Stages your landscape evolves through, from wasteland to thriving</div>
+      </div>
+      <div class="stat">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+        <div class="stat-num" data-count="0"></div>
+        <div class="stat-label">Sign-ups required to start your journey today</div>
       </div>
     </div>
   </div>
 </section>
-
-<!-- ═══════ FEATURES ═══════ -->
+ 
+<!-- ════════════ MANIFESTO ════════════ -->
+<section class="manifesto">
+  <!-- Decorative leaves on right -->
+  <svg class="manifesto-deco" viewBox="0 0 380 800" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 380 100 Q 300 200, 250 320 T 150 580 T 50 780"
+          stroke="#5c3a0a" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <g fill="url(#branchLeaf)" opacity="0.7">
+      <ellipse cx="340" cy="150" rx="34" ry="12" transform="rotate(50 340 150)"/>
+      <ellipse cx="290" cy="220" rx="38" ry="13" transform="rotate(-25 290 220)"/>
+      <ellipse cx="250" cy="290" rx="36" ry="12" transform="rotate(45 250 290)"/>
+      <ellipse cx="220" cy="370" rx="40" ry="14" transform="rotate(-20 220 370)"/>
+      <ellipse cx="180" cy="450" rx="34" ry="12" transform="rotate(50 180 450)"/>
+      <ellipse cx="140" cy="540" rx="38" ry="13" transform="rotate(-25 140 540)"/>
+      <ellipse cx="100" cy="640" rx="32" ry="11" transform="rotate(45 100 640)"/>
+      <ellipse cx="60" cy="730" rx="34" ry="12" transform="rotate(-20 60 730)"/>
+    </g>
+  </svg>
+ 
+  <div class="container">
+    <span class="eyebrow reveal">The shift</span>
+    <p class="manifesto-text reveal">
+      Most people care about the planet.
+      What they don't have is a way to <em class="highlight">feel</em> it.
+      Green Groove turns invisible decisions into a landscape you can watch
+      transform — every shorter shower, every meatless meal,
+      every light switched off becomes a tree, a flower, a returning bird.
+    </p>
+  </div>
+</section>
+ 
+<!-- ════════════ SOLARPUNK EVOLUTION ════════════ -->
+<section id="evolution">
+  <div class="container">
+    <div class="evo-header">
+      <span class="eyebrow reveal">100 years from now</span>
+      <h2 class="display-lg reveal">The world, <span class="italic-warm">in your hands.</span></h2>
+      <p class="lead reveal" style="margin-top: 1rem;">
+        Your daily habits aren't just points on a screen. They're a vote for which
+        version of 2126 actually arrives. Scrub through four futures — each one's already on the table.
+      </p>
+    </div>
+ 
+    <div class="evo-stage reveal">
+      <div class="evo-viewport">
+        <!-- Seven stages, cross-faded using repo images -->
+        <div class="evo-scene active" data-scene="0">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage1.png" alt="Stage 1 - Barren Wasteland" />
+        </div>
+        <div class="evo-scene" data-scene="1">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage2.png" alt="Stage 2 - Dusty Ruins" />
+        </div>
+        <div class="evo-scene" data-scene="2">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage3.png" alt="Stage 3 - First Signs of Life" />
+        </div>
+        <div class="evo-scene" data-scene="3">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage4.png" alt="Stage 4 - Recovery" />
+        </div>
+        <div class="evo-scene" data-scene="4">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage5.png" alt="Stage 5 - Green Paradise" />
+        </div>
+        <div class="evo-scene" data-scene="5">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage6.png" alt="Stage 6 - Thriving" />
+        </div>
+        <div class="evo-scene" data-scene="6">
+          <img src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage7.png" alt="Stage 7 - Solarpunk Utopia" />
+        </div>
+      <div class="evo-controls">
+        <div class="evo-info">
+          <div class="evo-num" id="evoNum">Stage 1 of 7</div>
+          <div class="evo-title" id="evoTitle">Barren Wasteland</div>
+          <div class="evo-desc" id="evoDesc">Cracked earth, dead trees, the skeletons of a world that took its environment for granted. This is where apathy leads.</div>
+        </div>
+        <div class="evo-track">
+          <button class="evo-step active" data-stage="0"><span>Barren</span></button>
+          <button class="evo-step" data-stage="1"><span>Ruins</span></button>
+          <button class="evo-step" data-stage="2"><span>First Life</span></button>
+          <button class="evo-step" data-stage="3"><span>Recovery</span></button>
+          <button class="evo-step" data-stage="4"><span>Paradise</span></button>
+          <button class="evo-step" data-stage="5"><span>Thriving</span></button>
+          <button class="evo-step" data-stage="6"><span>Solarpunk</span></button>
+        </div>
+      </div>
+    </div>
+ 
+    <p class="evo-caption reveal">
+      Every habit — every shorter shower, every skipped drive, every plant swap — pulls
+      the dial one notch toward the right. Green Groove just makes that dial visible.
+    </p>
+  </div>
+</section>
+<!-- ════════════ FEATURES (BENTO) ════════════ -->
 <section id="features">
   <div class="container">
-    <span class="section-label">What It Does</span>
-    <h2 class="section-title">Key Features</h2>
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📋</div>
-        <h3>Baseline Survey</h3>
-        <p>A series of multiple-choice questions across energy, consumption, and water usage that builds a comprehensive picture of your environmental habits and footprint.</p>
+    <div class="features-header">
+      <div class="reveal">
+        <span class="eyebrow">What it does</span>
+        <h2 class="display-lg">A loop you actually <span class="italic-warm">want</span> to come back to.</h2>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🌳</div>
-        <h3>Living Landscape</h3>
-        <p>A dynamic visual that evolves through 6 stages. Start with a barren wasteland and a dead stick, and watch a tree grow, flowers bloom, and birds return as your score climbs.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🎯</div>
-        <h3>Personalized Daily Goals</h3>
-        <p>The app targets your weakest categories with actionable daily challenges. Simple tasks like "take a 5-minute shower" that earn points and visibly improve your world.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📊</div>
-        <h3>Score Breakdown</h3>
-        <p>Real-time scoring across three categories with color-coded progress bars. See exactly where you stand and which areas need the most improvement.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔄</div>
-        <h3>Continuous Progress</h3>
-        <p>After the baseline, the goal system keeps going. Each day brings fresh challenges based on completion history, so the experience stays engaging and pushes you forward.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📱</div>
-        <h3>Zero Friction</h3>
-        <p>Fully responsive, works on any device with a browser. No downloads, no sign-ups. Open the link and start your journey immediately.</p>
-      </div>
+      <p class="lead reveal" style="margin-top: 0;">
+        Six pillars that turn caring into doing — and doing into something you can see.
+      </p>
+    </div>
+ 
+    <div class="features-grid reveal-stagger">
+      <!-- LARGE: living landscape -->
+      <article class="feat feat--lg feat-living">
+        <span class="feat-tag">Core mechanic</span>
+        <h3>A living landscape that grows with you</h3>
+        <p>Start with cracked earth and a dead branch. As you complete daily goals, your scene evolves through seven stages — saplings, blossoms, returning birds, full canopy. Your impact, made visible.</p>
+ 
+        <!-- Stage images slideshow -->
+        <div class="feat-stages" aria-hidden="true">
+          <img class="feat-stage-img active" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage1.png" alt="Stage 1" />
+          <img class="feat-stage-img" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage2.png" alt="Stage 2" />
+          <img class="feat-stage-img" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage3.png" alt="Stage 3" />
+          <img class="feat-stage-img" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage4.png" alt="Stage 4" />
+          <img class="feat-stage-img" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage5.png" alt="Stage 5" />
+          <img class="feat-stage-img" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage6.png" alt="Stage 6" />
+          <img class="feat-stage-img" src="https://raw.githubusercontent.com/mirzab25/Hackfest26/main/Stuff/stage7.png" alt="Stage 7" />
+        </div>
+      </article>
+ 
+      <!-- Right top: Survey -->
+      <article class="feat">
+        <span class="feat-tag">Step 01</span>
+        <h3>A baseline that actually fits you</h3>
+        <p>Quick multiple-choice survey across energy, consumption, and water. We map where your footprint actually lives.</p>
+      </article>
+ 
+      <!-- Right top 2: Goals -->
+      <article class="feat">
+        <span class="feat-tag">Step 02</span>
+        <h3>Goals tuned to your weak spots</h3>
+        <p>"Take a five-minute shower." "Skip the drive today." Daily challenges aimed where you'll move the needle.</p>
+      </article>
+ 
+      <!-- Wide bottom: Score -->
+      <article class="feat feat--wide feat-amber">
+        <span class="feat-tag">Always-on dashboard</span>
+        <h3>Three scores. One honest mirror.</h3>
+        <p style="max-width: 420px;">Live progress bars across energy, consumption, and water tell you exactly where you stand and which habits are quietly costing you.</p>
+ 
+        <!-- Score bars illustration -->
+        <svg class="feat-visual" style="top: 50%; right: 2rem; transform: translateY(-50%); width: 280px; height: 180px;" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#d8c8a4">
+            <text x="0" y="20">ENERGY</text>
+            <text x="252" y="20" text-anchor="end" fill="#82a854">68%</text>
+            <rect x="0" y="28" width="280" height="6" rx="3" fill="rgba(255,255,255,0.06)"/>
+            <rect x="0" y="28" width="190" height="6" rx="3" fill="#5d8838"/>
+ 
+            <text x="0" y="70">CONSUMPTION</text>
+            <text x="252" y="70" text-anchor="end" fill="#e6a23c">42%</text>
+            <rect x="0" y="78" width="280" height="6" rx="3" fill="rgba(255,255,255,0.06)"/>
+            <rect x="0" y="78" width="118" height="6" rx="3" fill="#e6a23c"/>
+ 
+            <text x="0" y="120">WATER</text>
+            <text x="252" y="120" text-anchor="end" fill="#a6c574">81%</text>
+            <rect x="0" y="128" width="280" height="6" rx="3" fill="rgba(255,255,255,0.06)"/>
+            <rect x="0" y="128" width="227" height="6" rx="3" fill="#a6c574"/>
+ 
+            <text x="0" y="170" fill="#8c8068" font-size="9">↑ +12 this week</text>
+          </g>
+        </svg>
+      </article>
+ 
+      <!-- Bottom small 1 -->
+      <article class="feat">
+        <span class="feat-tag">Stay engaged</span>
+        <h3>Fresh challenges, every day</h3>
+        <p>The goal engine adapts to your history. New tasks calibrated to push you a little further every morning.</p>
+      </article>
+ 
+      <!-- Bottom small 2 -->
+      <article class="feat">
+        <span class="feat-tag">No friction</span>
+        <h3>Open the link. Start growing.</h3>
+        <p>Works on any device with a browser. No downloads, no sign-ups. You're in within ten seconds.</p>
+      </article>
     </div>
   </div>
 </section>
-
-<!-- ═══════ BUSINESS MODEL ═══════ -->
+ 
+<!-- ════════════ BUSINESS ════════════ -->
 <section id="business">
   <div class="container">
-    <span class="section-label">How It Grows</span>
-    <h2 class="section-title">Business Model</h2>
-    <div class="about-grid">
-      <div class="about-card fade-in">
-        <div class="card-icon">🆓</div>
-        <h3>Free Tier</h3>
-        <p>
-          The baseline survey, landscape visualization, and daily goal system are completely free.
-          Zero friction onboarding means users can start immediately with no sign-up required.
-          This drives viral adoption through shareability and word of mouth.
-        </p>
+    <div class="biz-header">
+      <span class="eyebrow reveal">How it grows</span>
+      <h2 class="display-lg reveal">A model that <span class="italic-warm">plants itself.</span></h2>
+      <p class="lead reveal" style="margin-top: 1rem;">
+        Free to start. Compelling to upgrade. Built to scale through schools, companies, and the people who care most.
+      </p>
+    </div>
+ 
+    <div class="biz-grid reveal-stagger">
+      <!-- Free -->
+      <div class="biz-card">
+        <div class="biz-name">Sapling</div>
+        <div class="biz-price"><span class="currency">$</span>0</div>
+        <p class="biz-desc">Take the baseline, watch your landscape come alive, get daily challenges. Forever free.</p>
+        <ul class="biz-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Baseline footprint survey</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Living landscape (7 stages)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Daily personalized goals</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Three-category scoring</li>
+        </ul>
       </div>
-      <div class="about-card fade-in">
-        <div class="card-icon">⭐</div>
-        <h3>Premium ($4.99/mo)</h3>
-        <p>
-          Unlocks detailed analytics and historical tracking, exclusive cosmetic items
-          and landscape themes, bonus coin multipliers on daily goals, streak rewards,
-          and no ads! Premium users also get access to weekly sustainability reports
-          with personalized insights.
-        </p>
+ 
+      <!-- Premium -->
+      <div class="biz-card featured">
+        <span class="biz-tag">Most popular</span>
+        <div class="biz-name">Grove</div>
+        <div class="biz-price"><span class="currency">$</span>4.99<span class="period">/mo</span></div>
+        <p class="biz-desc">Deeper analytics, richer landscapes, faster growth. Plus 25% donated to environmental causes.</p>
+        <ul class="biz-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Everything in Sapling</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Detailed analytics & history</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Cosmetic items & themes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Bonus coin multipliers</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Weekly impact reports</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 25% donated to MCE</li>
+        </ul>
       </div>
-      <div class="about-card fade-in">
-        <div class="card-icon">🏢</div>
-        <h3>Enterprise / Education</h3>
-        <p>
-          Schools and companies can license Green Groove for team-wide sustainability challenges.
-          Includes admin dashboards, leaderboards, and aggregate impact reporting.
-          Pricing starts at $2/user/month with volume discounts. Perfect for ESG initiatives
-          and campus sustainability programs.
-        </p>
-      </div>
-      <div class="about-card fade-in">
-        <div class="card-icon">🤝</div>
-        <h3>Partnerships</h3>
-        <p>
-          We are working directly with the Missouri Coalition for the Environment by donating
-          25% of proceeds directly to the cause. This gives users peace of mind and
-          more incentive to subscribe!
-        </p>
+ 
+      <!-- Enterprise -->
+      <div class="biz-card">
+        <div class="biz-name">Forest</div>
+        <div class="biz-price">from <span class="currency">$</span>2<span class="period">/seat</span></div>
+        <p class="biz-desc">For schools, companies, and ESG programs. Team-wide challenges with admin tooling.</p>
+        <ul class="biz-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Everything in Grove</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Team leaderboards</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Admin dashboard</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Aggregate impact reports</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
-
-<!-- ═══════ TECH STACK ═══════ -->
-<section id="tech">
+ 
+<!-- ════════════ CTA FOOTER ════════════ -->
+<section class="cta-footer">
   <div class="container">
-    <span class="section-label">Built With</span>
-    <h2 class="section-title">Tech Stack</h2>
-    <div class="tech-list">
-      <span class="tech-badge"><span class="badge-icon">🟧</span> HTML5</span>
-      <span class="tech-badge"><span class="badge-icon">🎨</span> CSS3</span>
-      <span class="tech-badge"><span class="badge-icon">⚡</span> Vanilla JavaScript</span>
-      <span class="tech-badge"><span class="badge-icon">🖼️</span> Blender</span>
-      <span class="tech-badge"><span class="badge-icon">🤖</span> Claude (Opus)</span>
+    <div class="cta-content reveal">
+      <span class="eyebrow">One small shift</span>
+      <h2 class="display-lg">The future is <span class="italic-warm">grown</span>,<br>not given.</h2>
+      <p>Take the baseline. Watch one barren landscape turn green. Five minutes — and the only thing on the other side is a better habit.</p>
+      <a href="#top" class="btn btn-primary">
+        Start growing
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+ 
+    <!-- Decorative full-width tree silhouette -->
+    <div class="cta-tree-wrap reveal">
+      <svg viewBox="0 0 1100 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="ctaSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5c36a" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#d98a48" stop-opacity="0.25"/>
+          </linearGradient>
+          <radialGradient id="ctaSun" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#fbe199" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#fbe199" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="ctaTrunk" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1e1008"/>
+            <stop offset="50%" stop-color="#4a2a18"/>
+            <stop offset="100%" stop-color="#1e1008"/>
+          </linearGradient>
+          <radialGradient id="ctaCanopy" cx="0.5" cy="0.45" r="0.55">
+            <stop offset="0%" stop-color="#3a5220" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#0a1608" stop-opacity="1"/>
+          </radialGradient>
+          <radialGradient id="ctaCanopyFar" cx="0.5" cy="0.5" r="0.55">
+            <stop offset="0%" stop-color="#2a3818" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#0a1608" stop-opacity="0.9"/>
+          </radialGradient>
+          <linearGradient id="ctaGround" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a2612"/>
+            <stop offset="100%" stop-color="#080f06"/>
+          </linearGradient>
+        </defs>
+        <!-- warm horizon glow -->
+        <rect x="0" y="0" width="1100" height="280" fill="url(#ctaSky)"/>
+        <circle cx="550" cy="220" r="180" fill="url(#ctaSun)"/>
+        <!-- very distant tree line (blurred horizon silhouette) -->
+        <g opacity="0.55" fill="#2a3818">
+          <circle cx="40" cy="205" r="14"/><circle cx="80" cy="200" r="18"/><circle cx="120" cy="208" r="15"/><circle cx="165" cy="202" r="20"/><circle cx="215" cy="206" r="16"/><circle cx="260" cy="200" r="19"/><circle cx="300" cy="210" r="14"/><circle cx="340" cy="204" r="17"/><circle cx="380" cy="208" r="15"/><circle cx="420" cy="202" r="20"/><circle cx="470" cy="206" r="16"/><circle cx="520" cy="200" r="18"/><circle cx="580" cy="202" r="19"/><circle cx="630" cy="207" r="15"/><circle cx="680" cy="200" r="22"/><circle cx="735" cy="205" r="17"/><circle cx="785" cy="200" r="20"/><circle cx="830" cy="208" r="15"/><circle cx="875" cy="203" r="19"/><circle cx="920" cy="208" r="16"/><circle cx="965" cy="202" r="20"/><circle cx="1010" cy="207" r="16"/><circle cx="1060" cy="202" r="18"/>
+        </g>
+        <rect x="0" y="215" width="1100" height="4" fill="#1a2612" opacity="0.6"/>
+        <!-- mid-distance trees -->
+        <g fill="url(#ctaCanopyFar)">
+          <g transform="translate(110 230)"><path d="M0 0 L0 -24" stroke="#1a1008" stroke-width="2"/><ellipse cx="0" cy="-28" rx="18" ry="15"/></g>
+          <g transform="translate(230 230)"><path d="M0 0 L0 -32" stroke="#1a1008" stroke-width="2.5"/><ellipse cx="0" cy="-38" rx="22" ry="18"/></g>
+          <g transform="translate(380 230)"><path d="M0 0 L0 -26" stroke="#1a1008" stroke-width="2"/><ellipse cx="0" cy="-30" rx="19" ry="16"/></g>
+          <g transform="translate(760 230)"><path d="M0 0 L0 -30" stroke="#1a1008" stroke-width="2.5"/><ellipse cx="0" cy="-36" rx="21" ry="17"/></g>
+          <g transform="translate(890 230)"><path d="M0 0 L0 -24" stroke="#1a1008" stroke-width="2"/><ellipse cx="0" cy="-28" rx="18" ry="15"/></g>
+          <g transform="translate(990 230)"><path d="M0 0 L0 -28" stroke="#1a1008" stroke-width="2"/><ellipse cx="0" cy="-32" rx="20" ry="16"/></g>
+        </g>
+        <!-- ground -->
+        <path d="M0 235 Q275 230, 550 233 T1100 235 L1100 280 L0 280 Z" fill="url(#ctaGround)"/>
+        <!-- hero tree (centered) -->
+        <g transform="translate(550 235)">
+          <!-- roots spreading -->
+          <g fill="#1a1008">
+            <path d="M -10 0 Q -40 -4, -80 0 Q -50 6, -15 5 Z"/>
+            <path d="M 10 0 Q 40 -4, 80 0 Q 50 6, 15 5 Z"/>
+            <path d="M -4 0 Q -2 -5, 2 -8 Q 4 -3, 5 2 Z"/>
+          </g>
+          <!-- main trunk with slight curve -->
+          <path d="M 0 0
+                   Q -4 -30, 2 -60
+                   Q -3 -90, 4 -120
+                   Q -2 -150, 3 -180"
+                stroke="url(#ctaTrunk)" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <!-- main branches -->
+          <g stroke="url(#ctaTrunk)" stroke-width="9" fill="none" stroke-linecap="round">
+            <path d="M 2 -95 Q -30 -110, -65 -120"/>
+            <path d="M 3 -120 Q 35 -135, 68 -142"/>
+            <path d="M 2 -145 Q -25 -160, -50 -170"/>
+            <path d="M 3 -160 Q 28 -175, 52 -180"/>
+          </g>
+          <!-- secondary branches -->
+          <g stroke="#1a1008" stroke-width="4" fill="none" stroke-linecap="round">
+            <path d="M -65 -120 Q -85 -125, -100 -130"/>
+            <path d="M -65 -120 Q -75 -108, -82 -98"/>
+            <path d="M 68 -142 Q 90 -148, 108 -150"/>
+            <path d="M 68 -142 Q 78 -128, 85 -118"/>
+            <path d="M -50 -170 Q -68 -175, -80 -178"/>
+            <path d="M 52 -180 Q 70 -182, 85 -183"/>
+            <path d="M 3 -180 Q -8 -192, -15 -198"/>
+            <path d="M 3 -180 Q 14 -192, 22 -198"/>
+          </g>
+          <!-- tertiary twigs -->
+          <g stroke="#1a1008" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85">
+            <path d="M -100 -130 L -115 -132 M -100 -130 L -108 -140"/>
+            <path d="M 108 -150 L 122 -152 M 108 -150 L 115 -160"/>
+            <path d="M -80 -178 L -92 -182 M 85 -183 L 95 -188"/>
+            <path d="M -15 -198 L -22 -206 M 22 -198 L 30 -206"/>
+          </g>
+          <!-- layered leafy canopy (many overlapping organic blobs) -->
+          <g>
+            <ellipse cx="-75" cy="-130" rx="32" ry="26" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-40" cy="-148" rx="36" ry="28" fill="url(#ctaCanopy)"/>
+            <ellipse cx="0" cy="-158" rx="40" ry="32" fill="url(#ctaCanopy)"/>
+            <ellipse cx="45" cy="-150" rx="36" ry="28" fill="url(#ctaCanopy)"/>
+            <ellipse cx="82" cy="-138" rx="30" ry="24" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-60" cy="-165" rx="28" ry="22" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-20" cy="-180" rx="34" ry="28" fill="url(#ctaCanopy)"/>
+            <ellipse cx="28" cy="-182" rx="32" ry="26" fill="url(#ctaCanopy)"/>
+            <ellipse cx="65" cy="-172" rx="28" ry="22" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-40" cy="-195" rx="26" ry="20" fill="url(#ctaCanopy)"/>
+            <ellipse cx="5" cy="-205" rx="30" ry="24" fill="url(#ctaCanopy)"/>
+            <ellipse cx="48" cy="-200" rx="26" ry="20" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-10" cy="-220" rx="22" ry="17" fill="url(#ctaCanopy)"/>
+            <ellipse cx="25" cy="-215" rx="20" ry="16" fill="url(#ctaCanopy)"/>
+            <!-- subtle highlights catching sunset -->
+            <ellipse cx="-30" cy="-188" rx="12" ry="8" fill="#5a7a3e" opacity="0.5"/>
+            <ellipse cx="35" cy="-195" rx="10" ry="7" fill="#5a7a3e" opacity="0.45"/>
+            <ellipse cx="10" cy="-210" rx="8" ry="5" fill="#6a8a4a" opacity="0.5"/>
+          </g>
+          <!-- warm fruit dots peeking through -->
+          <g opacity="0.9">
+            <circle cx="-50" cy="-145" r="2.5" fill="#f5c36a"/>
+            <circle cx="20" cy="-155" r="2.5" fill="#f5c36a"/>
+            <circle cx="60" cy="-165" r="2.5" fill="#e89ac0"/>
+            <circle cx="-20" cy="-175" r="2.5" fill="#f5c36a"/>
+            <circle cx="38" cy="-188" r="2.5" fill="#e89ac0"/>
+            <circle cx="0" cy="-195" r="2.2" fill="#f5c36a"/>
+          </g>
+        </g>
+        <!-- side trees frame the composition -->
+        <g transform="translate(320 235)" opacity="0.85">
+          <path d="M 0 0 Q -2 -40, 2 -75 Q -1 -105, 3 -135" stroke="#1a1008" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <g stroke="#1a1008" stroke-width="5" fill="none" stroke-linecap="round">
+            <path d="M 2 -85 Q -22 -95, -40 -100"/>
+            <path d="M 3 -115 Q 24 -125, 42 -128"/>
+          </g>
+          <g>
+            <ellipse cx="-35" cy="-105" rx="24" ry="20" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-5" cy="-115" rx="28" ry="22" fill="url(#ctaCanopy)"/>
+            <ellipse cx="28" cy="-125" rx="26" ry="20" fill="url(#ctaCanopy)"/>
+            <ellipse cx="0" cy="-140" rx="22" ry="18" fill="url(#ctaCanopy)"/>
+          </g>
+        </g>
+        <g transform="translate(780 235)" opacity="0.85">
+          <path d="M 0 0 Q 3 -38, -2 -70 Q 2 -100, -3 -130" stroke="#1a1008" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <g stroke="#1a1008" stroke-width="5" fill="none" stroke-linecap="round">
+            <path d="M -2 -80 Q 22 -90, 42 -95"/>
+            <path d="M -3 -110 Q -25 -118, -45 -122"/>
+          </g>
+          <g>
+            <ellipse cx="35" cy="-100" rx="24" ry="20" fill="url(#ctaCanopy)"/>
+            <ellipse cx="5" cy="-110" rx="28" ry="22" fill="url(#ctaCanopy)"/>
+            <ellipse cx="-28" cy="-120" rx="26" ry="20" fill="url(#ctaCanopy)"/>
+            <ellipse cx="0" cy="-135" rx="22" ry="18" fill="url(#ctaCanopy)"/>
+          </g>
+        </g>
+        <!-- birds in silhouette -->
+        <g stroke="#3a2418" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.85">
+          <path d="M 200 140 Q 206 135, 212 140 Q 218 135, 224 140"/>
+          <path d="M 250 155 Q 254 151, 258 155 Q 262 151, 266 155"/>
+          <path d="M 870 145 Q 876 140, 882 145 Q 888 140, 894 145"/>
+        </g>
+        <!-- grass foreground -->
+        <g stroke="#1a2612" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7">
+          <path d="M 80 260 L 80 252 M 85 260 L 86 250"/>
+          <path d="M 280 265 L 280 256 M 285 265 L 286 254"/>
+          <path d="M 460 268 L 460 260 M 465 268 L 466 258"/>
+          <path d="M 660 266 L 660 257 M 665 266 L 666 256"/>
+          <path d="M 920 263 L 920 254 M 925 263 L 926 253"/>
+        </g>
+      </svg>
     </div>
   </div>
-</section>
-
-<!-- ═══════ TEAM ═══════ -->
-<section id="team">
-  <div class="container">
-    <span class="section-label">Who We Are</span>
-    <h2 class="section-title">Meet the Team</h2>
-    <div class="team-grid">
-      <div class="team-member fade-in">
-        <div class="team-avatar">M</div>
-        <h4>Mirza</h4>
-        <p>Developer</p>
+ 
+  <footer>
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fbe199">
+          <path d="M12 2 C 8 6, 6 10, 6 14 a 6 6 0 0 0 12 0 C 18 10, 16 6, 12 2 Z"/>
+        </svg>
+        <span>Green Groove</span>
       </div>
-      <div class="team-member fade-in">
-        <div class="team-avatar">I</div>
-        <h4>Ian</h4>
-        <p>Designer</p>
-      </div>
-      <div class="team-member fade-in">
-        <div class="team-avatar">D</div>
-        <h4>Donald</h4>
-        <p>Business Strategist</p>
-      </div>
-      <div class="team-member fade-in">
-        <div class="team-avatar">D</div>
-        <h4>Dewayne</h4>
-        <p>Business Strategist</p>
-      </div>
-      <div class="team-member fade-in">
-        <div class="team-avatar">G</div>
-        <h4>Hunter</h4>
-        <p>Developer</p>
-      </div>
-      <div class="team-member fade-in">
-        <div class="team-avatar">C</div>
-        <h4>Chevelle</h4>
-        <p>Developer</p>
+      <div>
+        <span>Built with care at Webster Hackfest 2026</span>
+        <span class="sep">·</span>
+        <span style="color: var(--amber-200);">1st Place</span>
       </div>
     </div>
-  </div>
+  </footer>
 </section>
-
-<!-- ═══════ FOOTER ═══════ -->
-<footer>
-  <div class="container">
-    <p>Built with <span class="heart">&#9829;</span> at Webster Hackfest 2026 &middot; Generation 100</p>
+ 
+<!-- ════════════ TWEAKS PANEL ════════════ -->
+<div id="tweaks" hidden>
+  <div class="tw-head">
+    <strong>Tweaks</strong>
+    <span class="tw-sub">Live edits</span>
   </div>
-</footer>
-
+ 
+  <label class="tw-row">
+    <span>Headline</span>
+    <textarea data-tw="headline" rows="2"></textarea>
+  </label>
+ 
+  <label class="tw-row">
+    <span>Italic accent (2nd line)</span>
+    <input data-tw="headlineAccent" type="text">
+  </label>
+ 
+  <div class="tw-row">
+    <span>Leaf shape</span>
+    <div class="tw-seg" data-tw-seg="leafShape">
+      <button data-v="pointed">Pointed</button>
+      <button data-v="oak">Oak</button>
+      <button data-v="maple">Maple</button>
+    </div>
+  </div>
+ 
+  <label class="tw-row">
+    <span>Leaf count <em data-val="leafCount"></em></span>
+    <input data-tw="leafCount" type="range" min="0.2" max="2.5" step="0.1">
+  </label>
+ 
+  <label class="tw-row">
+    <span>Sway speed <em data-val="swaySpeed"></em></span>
+    <input data-tw="swaySpeed" type="range" min="0.3" max="2" step="0.1">
+  </label>
+ 
+  <label class="tw-row">
+    <span>Amber warmth <em data-val="warmth"></em></span>
+    <input data-tw="warmth" type="range" min="0" max="1.5" step="0.05">
+  </label>
+ 
+  <div class="tw-row">
+    <span>Botanical framing</span>
+    <div class="tw-seg" data-tw-seg="botanicals">
+      <button data-v="on">On</button>
+      <button data-v="off">Off</button>
+    </div>
+  </div>
+</div>
+ 
+<style>
+  #tweaks[hidden] { display: none; }
+  #tweaks {
+    position: fixed; right: 1rem; bottom: 1rem; z-index: 500;
+    width: 320px;
+    background: rgba(20, 16, 10, 0.92);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(230, 162, 60, 0.25);
+    border-radius: 16px;
+    padding: 1rem 1rem 1.1rem;
+    color: var(--text-warm);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    display: grid; gap: 0.9rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+  #tweaks .tw-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 1px solid rgba(230, 162, 60, 0.15);
+    padding-bottom: 0.6rem;
+  }
+  #tweaks .tw-head strong {
+    font-family: var(--font-display);
+    font-size: 1rem; font-weight: 600;
+    color: var(--amber-100);
+  }
+  #tweaks .tw-sub {
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--amber-300); opacity: 0.8;
+  }
+  #tweaks .tw-row {
+    display: grid; gap: 0.4rem;
+  }
+  #tweaks .tw-row > span {
+    font-family: var(--font-mono);
+    font-size: 0.66rem; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  #tweaks .tw-row em {
+    font-style: normal;
+    color: var(--amber-200);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  #tweaks textarea, #tweaks input[type="text"] {
+    background: rgba(254, 243, 212, 0.04);
+    border: 1px solid rgba(230, 162, 60, 0.18);
+    border-radius: 8px;
+    color: var(--text-bright);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    padding: 0.55rem 0.7rem;
+    width: 100%;
+    resize: vertical;
+  }
+  #tweaks textarea:focus, #tweaks input:focus {
+    outline: none; border-color: var(--amber-300);
+  }
+  #tweaks input[type="range"] { accent-color: var(--amber-200); width: 100%; }
+  #tweaks .tw-seg {
+    display: flex; gap: 4px;
+    background: rgba(0,0,0,0.3);
+    padding: 3px; border-radius: 8px;
+  }
+  #tweaks .tw-seg button {
+    flex: 1;
+    padding: 0.45rem 0.4rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #tweaks .tw-seg button:hover { color: var(--amber-100); }
+  #tweaks .tw-seg button.on {
+    background: var(--amber-200);
+    color: var(--bg-deep);
+    font-weight: 600;
+  }
+</style>
+ 
 <script>
-  const canvas = document.getElementById('leaf-canvas');
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const LEAF_COLORS = ['#2d6a2d','#3a7a3a','#1e5c1e','#4a8a4a','#245c24'];
-  const LEAF_COUNT = 18;
-
-  function randomBetween(a, b) { return a + Math.random() * (b - a); }
-
-  class Leaf {
-    constructor() { this.reset(true); }
-    reset(initial = false) {
-      this.x = randomBetween(0, canvas.width);
-      this.y = initial ? randomBetween(-canvas.height, 0) : randomBetween(-120, -20);
-      this.size = randomBetween(14, 28);
-      this.speedY = randomBetween(0.8, 2.0);
-      this.speedX = randomBetween(-0.6, 0.6);
-      this.angle = randomBetween(0, Math.PI * 2);
-      this.spin = randomBetween(-0.025, 0.025);
-      this.sway = randomBetween(0.3, 0.9);
-      this.swayOffset = randomBetween(0, Math.PI * 2);
-      this.swaySpeed = randomBetween(0.015, 0.04);
-      this.color = LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)];
-      this.opacity = randomBetween(0.55, 0.9);
-    }
-    update(t) {
-      this.y += this.speedY;
-      this.x += this.speedX + Math.sin(this.swayOffset + t * this.swaySpeed) * this.sway;
-      this.angle += this.spin;
-      if (this.y > canvas.height + 40) this.reset();
-    }
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.opacity;
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.angle);
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-      ctx.lineWidth = 0.5;
-
-      // Maple leaf shape
-      ctx.beginPath();
-      const s = this.size;
-      ctx.moveTo(0, -s);
-      ctx.bezierCurveTo( s*0.4, -s*0.6,  s*0.9, -s*0.4,  s*0.5,  0);
-      ctx.bezierCurveTo( s*0.9,  s*0.1,  s*0.6,  s*0.5,  0,  s*0.3);
-      ctx.bezierCurveTo(-s*0.6,  s*0.5, -s*0.9,  s*0.1, -s*0.5,  0);
-      ctx.bezierCurveTo(-s*0.9, -s*0.4, -s*0.4, -s*0.6,  0, -s);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      // Stem
-      ctx.beginPath();
-      ctx.moveTo(0, s*0.3);
-      ctx.lineTo(0, s*0.75);
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      ctx.restore();
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "headline": "Grow the world",
+    "headlineAccent": "you'll live in.",
+    "leafShape": "oak",
+    "leafCount": 1,
+    "swaySpeed": 1,
+    "warmth": 1,
+    "botanicals": "off"
+  }/*EDITMODE-END*/;
+ 
+  window.__ggTweaks = { ...TWEAK_DEFAULTS };
+ 
+  /* ─── Apply a tweak value live ─── */
+  function applyTweak(key, value) {
+    window.__ggTweaks[key] = value;
+    if (key === 'headline' || key === 'headlineAccent') {
+      const h1 = document.getElementById('heroH1');
+      if (h1) {
+        h1.innerHTML = `${window.__ggTweaks.headline}<br><span class="italic-warm">${window.__ggTweaks.headlineAccent}</span>`;
+      }
+    } else if (key === 'leafCount') {
+      window.__ggRebuildLeaves?.();
+    } else if (key === 'swaySpeed') {
+      document.documentElement.style.setProperty('--sway-speed', value);
+      document.querySelectorAll('.hero-botanical').forEach(el => {
+        const base = parseFloat(el.dataset.baseDur || getComputedStyle(el).animationDuration);
+        if (!el.dataset.baseDur) el.dataset.baseDur = base;
+        el.style.animationDuration = (parseFloat(el.dataset.baseDur) / value) + 's';
+      });
+    } else if (key === 'warmth') {
+      document.documentElement.style.filter = value === 1 ? '' : `saturate(${0.7 + value * 0.5}) hue-rotate(${(value - 1) * -8}deg)`;
+      // Also boost sun glow
+      const sun = document.querySelector('.hero-sun');
+      const core = document.querySelector('.hero-sun-core');
+      if (sun) sun.style.opacity = Math.min(1, 0.4 + value * 0.6);
+      if (core) core.style.opacity = Math.min(1, 0.5 + value * 0.5);
+    } else if (key === 'botanicals') {
+      document.querySelectorAll('.hero-botanical').forEach(el => {
+        el.style.display = value === 'off' ? 'none' : '';
+      });
     }
   }
-
-  const leaves = Array.from({ length: LEAF_COUNT }, () => new Leaf());
-  let t = 0;
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    t++;
-    leaves.forEach(l => { l.update(t); l.draw(); });
-    requestAnimationFrame(animate);
-  }
-  animate();
+ 
+  /* ─── Tweaks UI wiring ─── */
+  (function wireTweaks() {
+    const panel = document.getElementById('tweaks');
+ 
+    function syncUI() {
+      panel.querySelectorAll('[data-tw]').forEach(el => {
+        const key = el.dataset.tw;
+        const v = window.__ggTweaks[key];
+        if (el.tagName === 'INPUT' && el.type === 'range') {
+          el.value = v;
+          const out = panel.querySelector(`[data-val="${key}"]`);
+          if (out) out.textContent = (+v).toFixed(2).replace(/\.?0+$/, '');
+        } else {
+          el.value = v;
+        }
+      });
+      panel.querySelectorAll('[data-tw-seg]').forEach(seg => {
+        const key = seg.dataset.twSeg;
+        const v = window.__ggTweaks[key];
+        seg.querySelectorAll('button').forEach(b => {
+          b.classList.toggle('on', b.dataset.v === v);
+        });
+      });
+    }
+ 
+    panel.addEventListener('input', (e) => {
+      const el = e.target;
+      if (!el.dataset.tw) return;
+      const key = el.dataset.tw;
+      let v = el.value;
+      if (el.type === 'range') {
+        v = parseFloat(v);
+        const out = panel.querySelector(`[data-val="${key}"]`);
+        if (out) out.textContent = v.toFixed(2).replace(/\.?0+$/, '');
+      }
+      applyTweak(key, v);
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: v } }, '*');
+    });
+ 
+    panel.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-tw-seg] button');
+      if (!btn) return;
+      const seg = btn.closest('[data-tw-seg]');
+      const key = seg.dataset.twSeg;
+      const v = btn.dataset.v;
+      seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+      applyTweak(key, v);
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: v } }, '*');
+    });
+ 
+    // Apply initial tweaks to page (shape is read on draw)
+    Object.entries(window.__ggTweaks).forEach(([k, v]) => applyTweak(k, v));
+    syncUI();
+ 
+    // Listener for host activation — register BEFORE announcing
+    window.addEventListener('message', (e) => {
+      const data = e.data || {};
+      if (data.type === '__activate_edit_mode') {
+        panel.hidden = false;
+        syncUI();
+      } else if (data.type === '__deactivate_edit_mode') {
+        panel.hidden = true;
+      }
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+  })();
 </script>
+ 
+<script>
+  /* ─── Nav scroll state ─── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }, { passive: true });
+ 
+  /* ─── Scroll reveal ─── */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        // Trigger counter if any
+        e.target.querySelectorAll('[data-count]').forEach(animateCount);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+ 
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+ 
+  /* ─── Number counters ─── */
+  function animateCount(el) {
+    const target = parseFloat(el.dataset.count);
+    if (isNaN(target)) return;
+    const isFloat = !Number.isInteger(target);
+    const duration = 1600;
+    const start = performance.now();
+    const unitHTML = el.querySelector('.unit')?.outerHTML || '';
+    // Ensure there's a leading text node for the counter
+    if (!el.firstChild || el.firstChild.nodeType !== 3) {
+      el.insertBefore(document.createTextNode('0'), el.firstChild);
+    }
+    function frame(t) {
+      const p = Math.min(1, (t - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = target * eased;
+      el.firstChild.nodeValue = isFloat ? val.toFixed(1) : Math.round(val);
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    el.firstChild.nodeValue = '0';
+    if (unitHTML) el.innerHTML = '0' + unitHTML;
+    requestAnimationFrame(frame);
+  }
+ 
+  /* ─── Hero falling leaves ─── */
+  (function leaves() {
+    const canvas = document.getElementById('leaf-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+ 
+    function resize() {
+      w = canvas.offsetWidth;
+      h = canvas.offsetHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+ 
+    const COLORS = [
+      ['#5d8838', '#3e6724'],
+      ['#82a854', '#3e6724'],
+      ['#e6a23c', '#9a6315'],
+      ['#c8841f', '#5c3a0a'],
+      ['#a6c574', '#5d8838'],
+      ['#3e6724', '#16320c'],
+    ];
+    let COUNT = Math.max(18, Math.floor(w / 70));
+    const leaves = [];
+    window.__ggRebuildLeaves = () => {
+      const target = Math.max(4, Math.floor((window.__ggTweaks?.leafCount || 1) * Math.max(18, w / 70)));
+      while (leaves.length < target) leaves.push(new Leaf());
+      while (leaves.length > target) leaves.pop();
+    };
+ 
+    function rand(a, b) { return a + Math.random() * (b - a); }
+ 
+    class Leaf {
+      constructor() { this.reset(true); }
+      reset(initial = false) {
+        this.x = rand(0, w);
+        this.y = initial ? rand(-h * 0.5, h * 0.7) : rand(-100, -20);
+        this.size = rand(8, 18);
+        this.vy = rand(0.4, 1.2);
+        this.vx = rand(-0.3, 0.3);
+        this.angle = rand(0, Math.PI * 2);
+        this.spin = rand(-0.025, 0.025);
+        this.sway = rand(0.3, 0.9);
+        this.swayOff = rand(0, Math.PI * 2);
+        this.swaySpeed = rand(0.012, 0.028);
+        const c = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.colorA = c[0];
+        this.colorB = c[1];
+        this.alpha = rand(0.5, 0.85);
+      }
+      step(t) {
+        this.y += this.vy;
+        this.x += this.vx + Math.sin(this.swayOff + t * this.swaySpeed) * this.sway;
+        this.angle += this.spin;
+        if (this.y > h + 40 || this.x < -40 || this.x > w + 40) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        const s = this.size;
+        const grad = ctx.createLinearGradient(-s, 0, s, 0);
+        grad.addColorStop(0, this.colorA);
+        grad.addColorStop(1, this.colorB);
+        ctx.fillStyle = grad;
+ 
+        const shape = window.__ggTweaks?.leafShape || 'pointed';
+        ctx.beginPath();
+        if (shape === 'maple') {
+          // Stylized 5-lobed maple-ish leaf
+          const pts = [
+            [0, -s], [s*0.35, -s*0.55], [s*0.9, -s*0.4],
+            [s*0.55, 0], [s*0.9, s*0.5], [s*0.3, s*0.35],
+            [0, s*0.95],
+            [-s*0.3, s*0.35], [-s*0.9, s*0.5], [-s*0.55, 0],
+            [-s*0.9, -s*0.4], [-s*0.35, -s*0.55]
+          ];
+          ctx.moveTo(pts[0][0], pts[0][1]);
+          for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+          ctx.closePath();
+        } else if (shape === 'oak') {
+          // Lobed oak leaf
+          ctx.moveTo(-s, 0);
+          ctx.quadraticCurveTo(-s*0.95, -s*0.3, -s*0.6, -s*0.35);
+          ctx.quadraticCurveTo(-s*0.55, -s*0.55, -s*0.25, -s*0.45);
+          ctx.quadraticCurveTo(-s*0.15, -s*0.7, 0.15*s, -s*0.55);
+          ctx.quadraticCurveTo(s*0.3, -s*0.7, s*0.55, -s*0.4);
+          ctx.quadraticCurveTo(s*0.95, -s*0.3, s, 0);
+          ctx.quadraticCurveTo(s*0.95, s*0.3, s*0.55, s*0.4);
+          ctx.quadraticCurveTo(s*0.3, s*0.7, 0.15*s, s*0.55);
+          ctx.quadraticCurveTo(-s*0.15, s*0.7, -s*0.25, s*0.45);
+          ctx.quadraticCurveTo(-s*0.55, s*0.55, -s*0.6, s*0.35);
+          ctx.quadraticCurveTo(-s*0.95, s*0.3, -s, 0);
+        } else {
+          // Default: pointed teardrop leaf (tip right, stem left)
+          ctx.moveTo(-s, 0);
+          ctx.bezierCurveTo(-s*0.6, -s*0.55, s*0.3, -s*0.55, s, 0);
+          ctx.bezierCurveTo(s*0.3, s*0.55, -s*0.6, s*0.55, -s, 0);
+        }
+        ctx.fill();
+ 
+        // Center vein
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+        ctx.lineWidth = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(-s, 0);
+        ctx.lineTo(s, 0);
+        ctx.stroke();
+        // Side veins for pointed/oak
+        if (shape !== 'maple') {
+          ctx.globalAlpha = this.alpha * 0.5;
+          ctx.lineWidth = 0.5;
+          for (let i = -2; i <= 2; i++) {
+            if (i === 0) continue;
+            const x = i * s * 0.28;
+            const y = Math.max(0, s * 0.4 - Math.abs(x) * 0.5);
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x + s*0.12, -y);
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x + s*0.12, y);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+    }
+ 
+    for (let i = 0; i < COUNT; i++) leaves.push(new Leaf());
+ 
+    let last = performance.now();
+    function loop(now) {
+      const t = now * 0.001;
+      ctx.clearRect(0, 0, w, h);
+      for (const lf of leaves) {
+        lf.step(t);
+        lf.draw();
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+ 
+  /* ─── Hero word reveal (split title) ─── */
+  (function splitTitle() {
+    const h1 = document.getElementById('heroH1');
+    if (!h1) return;
+    // Wrap each top-level text node's words in spans
+    const fragment = document.createDocumentFragment();
+    let delay = 0.25;
+    for (const node of Array.from(h1.childNodes)) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const words = node.textContent.split(/(\s+)/);
+        for (const word of words) {
+          if (/^\s+$/.test(word)) {
+            fragment.appendChild(document.createTextNode(word));
+          } else if (word.length) {
+            const span = document.createElement('span');
+            span.className = 'word';
+            span.textContent = word;
+            span.style.animationDelay = (delay).toFixed(2) + 's';
+            delay += 0.07;
+            fragment.appendChild(span);
+          }
+        }
+      } else if (node.nodeName === 'SPAN') {
+        // Wrap inline span's text in word spans too
+        const inner = document.createDocumentFragment();
+        const text = node.textContent;
+        const words = text.split(/(\s+)/);
+        node.textContent = '';
+        for (const word of words) {
+          if (/^\s+$/.test(word)) {
+            inner.appendChild(document.createTextNode(word));
+          } else if (word.length) {
+            const span = document.createElement('span');
+            span.className = 'word';
+            span.textContent = word;
+            span.style.animationDelay = (delay).toFixed(2) + 's';
+            delay += 0.07;
+            inner.appendChild(span);
+          }
+        }
+        node.appendChild(inner);
+        fragment.appendChild(node);
+      } else {
+        fragment.appendChild(node);
+      }
+    }
+    h1.innerHTML = '';
+    h1.appendChild(fragment);
+  })();
+ 
+  /* ══════ EVOLUTION TIMELINE ══════ */
+  (() => {
+    const viewport = document.querySelector('.evo-viewport');
+    const scenes = document.querySelectorAll('.evo-scene');
+    const steps = document.querySelectorAll('.evo-step');
+    const track = document.querySelector('.evo-track');
+    const numEl = document.getElementById('evoNum');
+    const titleEl = document.getElementById('evoTitle');
+    const descEl = document.getElementById('evoDesc');
+    if (!viewport || !scenes.length) return;
+ 
+    const COPY = [
+      {
+        num: 'Stage 1 of 7',
+        title: 'Barren Wasteland',
+        desc: 'Cracked earth, skeletal trees, the bones of a world that mistook growth for progress. This is what apathy looks like from the other side.'
+      },
+      {
+        num: 'Stage 2 of 7',
+        title: 'Dusty Ruins',
+        desc: 'Abandoned structures crumble as nature begins its slow reclamation. The ruins stand as reminders of what was lost, but green shoots push through the cracks.'
+      },
+      {
+        num: 'Stage 3 of 7',
+        title: 'First Signs of Life',
+        desc: 'Saplings take root. Grass returns. The land remembers what it was meant to be, and the first hints of recovery begin to show.'
+      },
+      {
+        num: 'Stage 4 of 7',
+        title: 'Recovery',
+        desc: 'Forests fill in. Wildlife returns. Communities start building with nature instead of against it. The momentum is real.'
+      },
+      {
+        num: 'Stage 5 of 7',
+        title: 'Green Paradise',
+        desc: 'Lush canopy, clean water, thriving ecosystems. The habits of millions compound into landscapes that sustain themselves.'
+      },
+      {
+        num: 'Stage 6 of 7',
+        title: 'Thriving',
+        desc: 'Technology and nature work in concert. Settlements blend seamlessly into restored environments. A new way of living takes hold.'
+      },
+      {
+        num: 'Stage 7 of 7',
+        title: 'Solarpunk Utopia',
+        desc: 'Vertical forests, sky-gardens, clean energy everywhere. Every habit you logged is a brick in this skyline. This is the upside.'
+      }
+    ];
+ 
+    let current = 0;
+    let autoAdvance = null;
+ 
+    function setStage(i, userInitiated = false) {
+      current = i;
+      viewport.setAttribute('data-stage', String(i));
+      scenes.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      steps.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      if (track) track.style.setProperty('--evo-stage', String(i));
+      if (numEl && titleEl && descEl) {
+        [numEl, titleEl, descEl].forEach(el => el.style.opacity = '0');
+        setTimeout(() => {
+          numEl.textContent = COPY[i].num;
+          titleEl.textContent = COPY[i].title;
+          descEl.textContent = COPY[i].desc;
+          [numEl, titleEl, descEl].forEach(el => el.style.opacity = '');
+        }, 220);
+      }
+      if (userInitiated && autoAdvance) {
+        clearInterval(autoAdvance);
+        autoAdvance = null;
+      }
+    }
+ 
+    steps.forEach((btn, idx) => btn.addEventListener('click', () => setStage(idx, true)));
+ 
+    // Auto-advance once the section comes into view
+    const startAuto = () => {
+      if (autoAdvance) return;
+      autoAdvance = setInterval(() => {
+        setStage((current + 1) % 7);
+      }, 4200);
+    };
+ 
+    const evoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) startAuto();
+        else if (autoAdvance) { clearInterval(autoAdvance); autoAdvance = null; }
+      });
+    }, { threshold: 0.35 });
+    const stage = document.querySelector('.evo-stage');
+    if (stage) evoObserver.observe(stage);
+  })();
+ 
+  /* ══════ FEATURE CARD STAGE SLIDESHOW ══════ */
+  (() => {
+    const imgs = document.querySelectorAll('.feat-stage-img');
+    if (!imgs.length) return;
+    let cur = 0;
+    setInterval(() => {
+      imgs[cur].classList.remove('active');
+      cur = (cur + 1) % imgs.length;
+      imgs[cur].classList.add('active');
+    }, 3000);
+  })();
+</script>
+ 
 </body>
 </html>
